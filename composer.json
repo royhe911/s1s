@@ -1,0 +1,22 @@
+{
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    },
+    "require": {
+        "qiniu/php-sdk": "^7.2",
+        "overtrue/pinyin": "~3.0",
+        "phpoffice/phpexcel": "^1.8",
+        "topthink/think-captcha":"2.0.2",
+        "phpmailer/phpmailer": "^6.0",
+        "jpush/jpush": "^3.6"
+    },
+    "autoload": {
+        "psr-4": {
+			"Jhtx\\WechatSdk\\": "vendor/wechat",
+            "Aliyun\\": "vendor/aliyuncs/aliyun-dysms-php-sdk/api_sdk/lib"
+		}
+    }
+}

@@ -1,0 +1,37 @@
+<style>
+	body{
+		background:#fff;
+	}
+    .os-five-1{
+        width: 20%;
+    }
+</style>
+<table id="table" class="table table-striped table-bordered table-hover" width="100%">
+    <thead>
+    <tr style="background-color: #e8f7f2;">
+        <th class="os-five-1" style="text-align: center; vertical-align: middle;">编号</th>
+        <th class="os-five-1" style="text-align: center; vertical-align: middle;">门店名称</th>
+        <th class="os-five-1" style="text-align: center; vertical-align: middle;">评论星级</th>
+        <th class="os-five-1" style="text-align: center; vertical-align: middle;">评论内容</th>
+        <th class="os-five-1" style="text-align: center; vertical-align: middle;">评论时间</th>
+    </tr>
+    </thead>
+    <tbody data-listidx="0">
+    {volist name='list' id='vo'}
+    <tr>
+        <td style="text-align: center; vertical-align: middle; ">{$vo.id}</td>
+        <td style="text-align: center; vertical-align: middle; ">{$vo.name}</td>
+        <td style="text-align: center; vertical-align: middle; ">
+            <div class="star-box-tem" style="margin: 0 auto;">
+                <div class="cover-image containCenter"></div>
+                <div class="cover-green" style="width: {:getStarNumber($vo['score'] ?? 0)}px;"></div>
+                <div class="cover-grey"></div>
+            </div>
+        </td>
+        <td style="text-align: center; vertical-align: middle;">{$vo.content}</td>
+        <td style="text-align: center; vertical-align: middle; ">{$vo.create_time}</td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+<div class="fixed-table-pagination">{$list->render()|raw}</div>

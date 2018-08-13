@@ -1,0 +1,163 @@
+<style>
+    .contain {
+        height: 100vh;
+        background-color: #fff;
+    }
+    /*校验字体样式*/
+    span.error{
+        /*border: 1px solid red;*/
+        color: red;
+        margin-top: 1.5px;
+        height: 28px;
+        font-size: 12px;
+        margin-left: 10px;
+    }
+    .c-region_id_box span.error{
+        margin-left: -2px;
+    }
+</style>
+
+<div class="panel-heading row" style="padding:0 15px;color: #999;font-size: 12px; line-height: 50px; background-color: transparent">
+    <!-- <div class="panel-lead"><em>门店分类管理</em></div> -->
+    <div style="background-color: #e8edf0;width: 100%; height: 50px;padding-left: 15px">
+        <div class="lf">
+            <i class="fa fa-home" style="font-size: 14px;"></i>
+        </div>
+        <div class="panel-lead lf" style="margin: 0px;">系统配置&nbsp;&nbsp;&nbsp;> </div>
+        <a href="<?php echo url('sysconf/rotation/index');?>" class="panel-lead lf" style="margin: 0px; color: #999 !important;"> &nbsp;&nbsp;&nbsp;轮播图管理&nbsp;&nbsp;&nbsp;> </a>
+        <div class="panel-lead lf pl" style="margin: 0px;color: #34c191;">&nbsp;&nbsp;&nbsp;<?php echo empty($row) ? '新增轮播图': '编辑轮播图';?></div>
+    </div>
+</div>
+<div class="panel-body" id='panel-body' style="height: 90vh;">
+    <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+        <input id="c-id" class="form-control" name="" type="hidden" value="{$row.id ?? ''}">
+        <div class="form-group">
+            <label for="c-title" class="control-label col-xs-12 col-sm-2"><span style="color: #ff777c;">*</span>轮播名称:</label>
+            <div class="col-xs-12 col-sm-8">
+                <!-- <div style="max-width:150px ;width:100%;display: inline-block;margin-right: 10px;"> -->
+                    <input id="c-title" name="c-title" class="form-control" type="text" value="{$row.title ?? ''}" style="display: inline-block;">
+                <!-- </div> -->
+            </div>
+        </div>
+        <?php if($is_super_admin){ ?>
+        <div class="form-group c-region_id_box">
+            <label for="c-name" class="control-label col-xs-12 col-sm-2"><span style="color: #ff777c;">*</span>添加城市:</label>
+            <div class="col-xs-12 col-sm-8">
+                <select class="form-control op" required="" id="c-is_visible" data-msg-empty="未选择"  style="display: inline-block;margin-right: 10px;">
+                    <option value="2">请选择</option>
+                    <option {if isset($row.is_visible) && $row.is_visible == 1}selected{/if} value="1">包含</option>
+                    <option {if isset($row.is_visible) && $row.is_visible == 0}selected{/if} value="0">不包含</option>
+                </select>
+                <div style="margin-top: 15px;">
+                    <div id="add_city_show" style="display: inline-block;" >
+                        <?php if(!empty($regions_data)) foreach($regions_data as $value){?>
+                        <span style="display: inline-block;margin-right: 5px;padding: 6px 15px;border-radius: 4px;border: 1px solid #34c191;color: #34c191;vertical-align: middle">
+                            <?php echo $value['name'] == '中国'? '全国': $value['name'];?>
+                            <i class="iconfont icon-cha1 ac-delete" data-id="100000" data-index="0" style="color: #dddddd;margin-left: 10px;cursor: pointer;"></i>
+                        </span>
+                        <?php }?>
+                    </div>
+                    <a id="add_city" class="btn btn-success btn-add"  style="padding: 8px 15px; margin-right: 10px;" data-database='<?php $regionsJson = empty($regions_data) ? "[]": json_encode($regions_data, JSON_UNESCAPED_UNICODE); echo $regionsJson?>'  href="javascript:;" onclick="layer_open('添加城市', '/article/article/region_list', {w:'750px',h:'850px'})" title="选择城市"><i class="fa fa-plus"></i> 选择城市</a>
+                    <input id="c-region_id" name="c-region_id" type="hidden" value="<?php echo empty($regions_data) ? '': (',' . implode(',', array_column($regions_data, 'id')) . ',');?>" style="display: inline-block;margin-right: 10px;">
+                </div>
+            </div>
+        </div>
+        <?php } ?>
+        <div class="form-group">
+            <label for="c-description" class="control-label col-xs-12 col-sm-2"><span style="color: #ff777c;">*</span>位置:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input value="1" type="checkbox" name="device" {if isset($row)}{in name="1" value="$row.device"}checked{/in}{/if}> Android
+                <input value="2" type="checkbox" name="device" {if isset($row)}{in name="2" value="$row.device"}checked{/in}{/if}> IOS
+                <input value="3" type="checkbox" name="device" {if isset($row)}{in name="3" value="$row.device"}checked{/in}{/if}> 小程序
+                <input value="4" type="checkbox" name="device" {if isset($row)}{in name="4" value="$row.device"}checked{/in}{/if}> PC
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2" style="line-height: 100px;"><span style="color: #ff777c;">*</span>轮播图片:</label>
+            <div class="l ac-img-container ac-img-url-box" data-name="image">
+                {if isset($row.image_xcx) && $row.image_xcx != ''}
+                <div class="formControls l mr-15 ta-imgItem ac-item-box">
+                    <i class="os-radius"></i>
+                    <img class="os-img" src="{$Think.config.qiniu.domain}{$row.image_xcx}" data-log="{$row.image_xcx}">
+                </div>
+                <div class="formControls l ta-imgItem ac-add hidden" style="width: 100px;height: 100px;">
+                    <img class="os-pointer" src="__CDN__/assets/img/defaultAdd.png" id="img" data-picture="0">
+                </div>
+                {else}
+                <div class="os-row">
+                    <div class="formControls l ta-imgItem ac-add" style="width: 100px;height: 100px;">
+                        <img class="os-pointer" src="__CDN__/assets/img/defaultAdd.png" id="img" data-picture="0">
+                    </div>
+                </div>
+                {/if}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="c-url" class="control-label col-xs-12 col-sm-2"><span style="color: #ff777c;">*</span>链接地址:</label>
+            <div class="col-xs-12 col-sm-8">
+                <!-- <div style="max-width:150px ;width:100%;display: inline-block;margin-right: 10px;"> -->
+                    <input id="c-url" name="c-url" class="form-control" type="text" value="{$row.url ?? ''}" style="width: 150px; height: 36px; display: inline-block;">
+                <!-- </div> -->
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="c-sort" class="control-label col-xs-12 col-sm-2">城市排序:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input id="c-sort" name="c-sort" class="form-control" type="text" value="{$row.sort ?? ''}" style="width: 150px; height: 36px; display: inline-block;">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="c-name" class="control-label col-xs-12 col-sm-2"><span style="color: #ff777c;">*</span> 状态:</label>
+            <div class="col-xs-12 col-sm-8" style="margin-left: 20px;margin-top: -5px;">
+                <div class="radio">
+                    <label for="is_show_1" class="radio-inline"><input checked="checked" id="is_show_1"  name="c-is_show" type="radio" value="1"> 启用</label>
+                    <label for="is_show_2" class="radio-inline"><input name="c-is_show" id="is_show_2"  type="radio" value="0"> 停用</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2"></label>
+            <div class="col-xs-12 col-sm-8">
+                <input id="submit" type="submit" class="btn btn-success btn-ok btn-embossed" value="保 存"></input>
+                <!--<button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>-->
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 表单校验插件 -->
+<script type="text/javascript" charset="utf-8" src="__CDN__/assets/js/backend/jquery-validation-1.14.0/jquery.validate.js?v={$site.version}"></script>
+<script type="text/javascript" charset="utf-8" src="__CDN__/assets/js/backend/jquery-validation-1.14.0/additional-methods.js"></script>
+<script type="text/javascript" src="__CDN__/assets/js/backend/validate/sysconf/rotation/edit.js"></script>
+
+<script>
+        // 删除已选择的城市
+        $("#add_city_show").on("click", ".ac-delete", function () {
+            var edit_brand = $("#add_city");
+            var array = JSON.parse(edit_brand.attr("data-database"));
+            var attr_index = $(this).attr("data-index");
+            array.splice(attr_index, 1);
+            var str_array = JSON.stringify(array)
+            edit_brand.attr("data-database", str_array);
+            $("#c-region_id").val(JSON.stringify(str_array));
+            $(this).parent().remove();
+        });
+
+        // 资讯预览图
+        up_img_System("img");
+        $("#edit-form").on("click", ".ac-item-box i", function () {
+            var os = $(this).parent();
+            var add = os.nextAll(".ac-add");
+            os.remove();
+            var isMain = $("#edit-form .ac-item");
+            if (os.children("sup").length != 0 && isMain.length > 0) {
+                $(isMain[0]).prepend("<sup></sup>");
+            }
+            console.log(add.length);
+            if (add.hasClass("hidden")) {
+                add.removeClass("hidden");
+            }
+        });
+</script>

@@ -1,0 +1,893 @@
+<script src="__CDN__/assets/js/vue.min.js"></script>
+<style>
+	 /*body{  
+
+    -webkit-user-select:none; 
+    -moz-user-select:none; 
+    -ms-user-select:none; 
+    user-select:none;
+    }*/
+    #panel-body label {
+        width: 125px !important;
+    }
+    #panel-body{
+    	padding-left:30px;
+    }
+    input[type='text']{
+    	width:250px!important;
+    }
+    /*校验字体样式*/
+    span.error{
+        /*border: 1px solid red;*/
+        color: red;
+        height: 28px;
+        font-size: 12px;
+        margin-left: 10px;
+        height: 36px;
+        line-height: 36px;
+    }
+    .types_data_box span.error{
+        margin-left: 0px;
+    }
+    .address_box span.error{
+        margin-right: 10px;
+    }
+    .active{
+        background-color: #34c191;
+        color: #fff;
+    }
+    .hide{
+        display: none;
+    }
+    .work_day_title_1, .work_hour_title_1{
+        width: 90px;
+        height: 32px;
+        display: inline-block;
+        text-align: center;
+        line-height: 32px;
+        cursor: pointer;
+        /*border-radius: 4px;*/
+        border: 1px solid #E4E4E4;
+    }
+    .work_hour_title_1{
+    	border:1px solid #E4E4E4;
+    }
+    .work_day_title_2, .work_hour_title_2{
+        width: 90px;
+        height: 32px;
+        display: inline-block;
+        text-align: center;
+        line-height: 32px;
+        cursor: pointer;
+        /*border-radius: 4px;*/
+        /*border: 1px solid #34c191;*/
+    }
+    .work_day_title_1{
+        margin-right: -4px;
+    }
+    .work_day_title_2, .work_hour_title_2{
+        width: 88px;
+        height: 32px;
+        display: inline-block;
+        text-align: center;
+        line-height: 32px;
+        cursor: pointer;
+        /*border: 1px solid green;*/
+    }
+    .work_day_title_2{
+        margin-right: -4px;
+    }
+    .business_hours_box_1 select{
+        width: 140px;
+        height: 30px;
+    }
+    .business_hours_box_1 .work_hour_separator{
+        display: inline-block;
+        margin: 0 10px;
+    }
+    .business_hours_box_2 select{
+        width: 140px;
+        height: 30px;
+    }
+    .business_hours_box_2 .work_hour_separator{
+        display: inline-block;
+        margin: 0 10px;
+    }
+    .select_disabled{
+        background-color: #ddd;
+    }
+    .bg_box{
+    	width:100%;
+    	height:100%;
+    	position:fixed;
+    	left:0;
+    	top:0;
+    	background:rgba(0,0,0,0.2);
+    	display: none;
+    	z-index:9999999;
+    }
+    .bg_box .big_img img{
+    	width:80vw;
+    	max-height:95vh;
+    	position:absolute;
+    	left:0;
+    	right:0;
+    	top:0;
+    	bottom:0;
+    	margin:auto;
+    }
+    .address_box{
+    	margin-top:10px;
+    }
+    .address_box .address{
+    	width:310px;
+    	height:36px;
+    	border:1px solid #ddd;
+    	border-radius: 4px;
+    	padding-left:10px;
+    	margin-top:10px;
+    	outline: none;
+    }
+    #editTypeCC{
+    	width:35px!important;
+    	height:30px!important;
+    }
+    .title_h{
+    	height:45px;
+    	line-height:45px;
+    	font-size:18px;
+    }
+    .title_h2{
+    	padding-bottom:10px;
+    	margin-bottom:30px;
+    	border-bottom:1px solid #ccc;
+    }
+    .status{
+    	width:120px;
+    	height:35px;
+    	border:1px solid #ccc;
+    	outline: none;
+    	padding-left:10px;
+    	border-radius: 4px;
+    }
+    .business_hours_title_1,.business_hours_title_2{
+    	background:#E4E4E4;
+    }
+    .work_day_1 span,.work_day_2 span{
+    	margin-left:10px;
+    }
+    .work_day_check_1,.work_day_check_2{
+    	margin-right:5px!important;
+    }
+    .cid_label{
+    	line-height:140px!important;
+    }
+    /*.ac-item-box{
+    	width:200px!important;
+    	height:130px!important;
+    }
+    .os-img{
+        width:200px!important;
+    	height:130px!important;
+    }*/
+    .add_piclist{
+    	width:100px;
+    	height:100px;
+    	background:url("__CDN__/assets/img/defaultAdd1.png");
+    	position:relative;
+    	float:left;
+    	margin-right:30px;
+    }
+    .add_piclist label{
+    	width:100px;
+    	height:100px;
+    	position:absolute;
+    	left:0;
+    	top:0;
+    	z-index: 10;
+    }
+    .add_piclist input{
+    	width:1px;
+    	height:1px;
+    	outline: none;
+    	visibility:hidden;
+    }
+    .divUL{
+    	float:left;
+    }
+    .divUL>div{
+    	width:100px;
+    	height:100px;
+    	margin:0 7px;
+    	float:left;
+    }
+    .divUL>div>img{
+    	width:100px!important;
+    	height:100px!important;
+    	
+    }
+    .id_box{
+    	width:200px!important;
+    	height:130px!important;
+    	float:left;
+    	margin-right:50px;
+    }
+    .id_box .ac-item-box{
+    	width:200px!important;
+    	height:130px!important;
+    }
+    #region_id_3{
+    	width:150px!important;
+    }
+    #code{
+    	width:50px!important;
+    	height:35px;
+    	border:1px solid #ccc;
+    	border-radius: 4px;
+    	margin-right:10px;
+    	padding-left:10px;
+    	outline: none;
+    }
+    #phone_number1{
+    	width:185px!important;
+    }
+    .imgList_label{
+    	line-height:100px!important;
+    }
+    .s_type{
+    	height:32px;
+        line-height:32px;
+    	float:left;
+    	margin-right:20px;
+    	margin-left:5px;
+    }
+     .s_type input{
+     	width:15px;
+     	height:15px;
+     	float:left;
+     	margin-top:8px!important;
+     }
+     .s_type span{
+     	float:left;
+     	margin-left:7px;
+     }
+     input[name="work_hour_2"]{
+     	margin-left:10px;
+     }
+</style>
+<div class="panel panel-default panel-intro">
+    <div class="panel-heading row" style="padding-top:0;color: #999;font-size: 12px; line-height: 50px; background-color: transparent">
+        <div style="background-color: #e8edf0;width: 100%; height: 50px;padding-left: 15px">
+            <div class="lf">
+                <i class="fa fa-home" style="font-size: 14px;"></i>
+            </div>
+            <div class="panel-lead lf" style="margin: 0px;">门店管理&nbsp;&nbsp;&nbsp;> </div>
+            <a href="<?php echo url('shops/index');?>" class="panel-lead lf pl" style="margin: 0px; color: #999 !important;" >&nbsp;&nbsp;&nbsp;门店列表&nbsp;&nbsp;&nbsp;> </a>
+            <div class="panel-lead lf pl" style="margin: 0px;color: #34c191;">&nbsp;&nbsp;&nbsp;{:isset($row.id) ? '编辑门店': '添加门店'}</div>
+        </div>
+    </div>
+    <div class="panel-body" id='panel-body'>
+    	<h2 class="title_h">门店信息</h2>
+        <form id="add_form_cc" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+            <input id="type_id" value="{$row.id ?? ''}" hidden>
+
+            <div class="form-group">
+                <label for="store_name" class="control-label col-xs-12 col-sm-2"><span style="color: #ff777c;">*</span> 门店名称：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <!-- <div style="max-width: 150px; width:100%; display: inline-block; margin-right: 10px;"> -->
+                        <input id="store_name" name="store_name" class="form-control" type="text" style="width: 150px; height: 36px; display: inline-block;" value="{$row.name ?? ''}">
+                    <!-- </div> -->
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="c-type" class="control-label col-xs-12 col-sm-2"><span style="color: #ff777c;">*</span> 门店地址：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <div class="form-inline os-row" style="width: 480px;display: inline-block;">
+                        <div class="col-sm-4" style="margin-left:-15px;line-height: 36px;">
+                            <div style="display: inline-block;">
+                                <input readonly class="form-control op" id="region_id_3" style="cursor: default; color: #999999;" placeholder="地区" data-region_id_3="{$row.region_id_3 ?? ''}" type="text" value="{if isset($row.region_id_3)}{$region[$row.region_id_3] ?? ''}{/if}">
+                            </div>
+                        </div>
+                        <div class="col-sm-4" style="line-height: 36px; width: 150px;">
+                            <select id="region_id_4" class="form-control op selectpicker" style="width: 150px; height: 36px;">
+                                <option value="0">商圈</option>
+                                {notempty name='region_list_4'}
+                                {volist name='region_list_4' id='vo'}
+                                <option {if isset($row.region_id_4) && $row.region_id_4 eq $key}selected{/if} value="{$key}">{$vo}</option>
+                                {/volist}
+                                {/notempty}
+                            </select>
+                        </div>
+                        
+                        <!--新增详细地址-->
+                        <div class="address_box" style="line-height: 36px; width: 150px;">
+	                        <input type="text" name="doorplate" id="doorplate" class="address" value="{$row.doorplate ?? ''}"  placeholder="门牌号"/>
+	                    </div>
+                        
+<!--                         <div class="col-sm-4" style="width: 150px;left: 20px; line-height: 36px; color: #269fd5; ">
+                            在地图上修改地址
+                        </div> -->
+<!--                         <a class="col-sm-4" href="javascript:;" onclick="layer_open('百度地图', '/shops/baidu_map', {w:'570px',h:'680px'})" target='_blank' style="display: inline-block; width: 150px; line-height: 36px; text-align: center;">点击这里选择地址</a> -->
+                    </div>
+                    
+                    
+
+                    <div class="os-row address_box" style="width: 500px;">
+                        <!-- <label for="address"></label> -->
+                        <div style="">
+                            <input id='coordinate' class="form-control op pull-left" type="hidden" value="{$row.longitude ?? ''},{$row.latitude ?? ''}">
+                            <input id="address" name="address" readonly class="form-control" style="width: 310px;height: 36px; outline: none; border: none; background-color: #fff; cursor: default; color: #999999; {if !isset($row.address)}display: none;{/if}" value="{$row.address ?? ''}">
+                            <a class="" href="javascript:;" onclick="layer_open('百度地图', '/shops/baidu_map', {w:'570px',h:'680px'})" target='_blank' style="display: inline-block; width: 150px; line-height: 36px; text-align: left;">点击这里选择地址</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="brand" class="control-label col-xs-12 col-sm-2"> 添加品牌：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <!-- <div style="width:100%;max-width: 300px;display: inline-block;margin-right: 10px;"> -->
+                        <input id="brand" name="brand" class="form-control" type="text" placeholder="请用英文逗号隔开品牌" style="display: inline-block;width: 150px; height: 36px;" value="{$row.brand ?? ''}">
+                    <!-- </div> -->
+                </div>
+            </div>
+            <div class="form-group types_data_box">
+                <label for="types_data" class="control-label col-xs-12 col-sm-2"><span style="color: #ff777c;">*</span> 选择分类：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <div class="form-inline">
+                        <div id="ac_type_show" style="display: inline-block;">
+                            {if !empty($shop_type_arr)}
+                            {volist name='shop_type_arr' id='vo'}
+                            <span style="display: inline-block;margin-right: 5px;padding: 8px 15px;border-radius: 4px;border: 1px solid #34c191;color: #34c191;">
+                                {$vo.name ?? ''}
+                                <!--<i class="iconfont icon-cha1 ac-delete" data-id="{$vo.id}" data-index="{$key}" style="color: #dddddd;margin-left: 10px;cursor: pointer;"></i>-->
+                            </span>
+                            {/volist}
+                            {/if}
+                        </div>
+                        <button id="editTypeCC" data-database="{$shop_type_json ?? ''}" onclick="changeTypes()" type="button" class="btn btn-success btn-ok btn-embossed mr-10">
+                            <i class="fa fa-plus"></i></button>
+                        <input id="types_data" name="types_data" type="hidden" value="{$shop_type_json ?? ''}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="acreage" class="control-label col-xs-12 col-sm-2">营业面积(平米)：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <!-- <div  style="max-width:200px ;width:100%;display: inline-block;margin-right: 10px;"> -->
+                        <input id="acreage" name="acreage" class="form-control op" type="text" style="display: inline-block;width: 150px; height: 36px;" value="{$row.acreage ?? ''}">
+                    <!-- </div> -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="scale" class="control-label col-xs-12 col-sm-2">规模(人)：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <!-- <div style="max-width:200px ;width:100%;display: inline-block;margin-right: 10px;"> -->
+                        <input id="scale" name="scale" class="form-control" type="text" style="display: inline-block;width: 150px; height: 36px;" value="{$row.scale ?? ''}">
+                    <!-- </div> -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-2">营业类型：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <div style="max-width:200px ;width:100%;display: inline-block;margin-right: 10px;">
+                        <select id="business_type" class="form-control op selectpicker" style="width: 150px;">
+                            {volist name='business_type' id='vo'}
+                            <option value="{$key}" {if isset($row.business_type) && $row.business_type eq $key}selected{/if}>{$vo}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="contacts" class="control-label col-xs-12 col-sm-2"><span style="color: #ff777c;">*</span> 联系人：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <!-- <div style="max-width:200px ;width:100%;display: inline-block;margin-right: 10px;"> -->
+                        <input id="contacts" name="contacts" class="form-control" type="text" style="display: inline-block;width: 150px; height: 36px;" value="{$row.contacts ?? ''}">
+                    <!-- </div> -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone_number" class="control-label col-xs-12 col-sm-2"><span style="color: #ff777c;">*</span>手机号码：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <!-- <div style="max-width:200px ;width:100%;display: inline-block;margin-right: 10px;"> -->
+                        <input id="phone_number" name="phone_number" class="form-control" type="text" style="display: inline-block;width: 150px; height: 36px;" value="{$row.phone_number ?? ''}">
+                    <!-- </div> -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="tel" class="control-label col-xs-12 col-sm-2">座机号码：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <!-- <div  style="max-width:200px ;width:100%;display: inline-block;margin-right: 10px;"> -->
+                    	<input type="text" class="code tel" id="code" value="{$row.phone_number1.0 ?? ''}" placeholder="区号" maxlength="5"/>
+                        <input id="phone_number1" name="phone_number1" class="form-control tel" type="text" placeholder="电话号码" style="display: inline-block; width: 150px; height: 36px;" value="{$row.phone_number1.1 ?? ''}">
+                        <input type="text" id="tel" name="tel" style="display: none;"/>
+                    	
+                    <!-- </div> -->
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone_number1" class="control-label col-xs-12 col-sm-2">营业状态：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <select name="" class="status" id="status">
+                    	<option value="1" {if isset($row.business_status) && $row.business_status eq 1}selected{/if}>营业中</option>
+                    	<option value="0" {if isset($row.business_status) && $row.business_status eq 0}selected{/if}>暂停营业</option>
+                    </select>
+                </div>
+            </div>
+            
+            
+            <!-- 第一个营业时间 -->
+             <div class="form-group business_hours_box_1">
+                <label class="control-label col-xs-12 col-sm-2 l">营业时间：</label>
+                <div class="col-xs-12 col-sm-8 l" style="margin-left:-15px;width: 800px;">
+                    <div class="col-xs-12 op business_hours_content_1" style="width: 480px; height: 76px; display: inline-block; border: 1px solid #ddd;">
+                        <div class="business_hours_title_1" style="width: 480px; height: 32px; margin-left: -15px;">
+                            <div class="work_day_title_1 active">营业日</div>
+                            <div class="work_hour_title_1">营业时段</div>
+                        </div>
+                        <div style="width: 480px; height: 44px; margin-left: -15px; line-height: 44px;">
+                            <div class="work_day_1" style="width: 480px; height: 44px;">
+                                <span><input name="work_day_check_all_1" type="checkbox" value="0"> 整周</span>
+                                <span> | </span>
+                                {for start="1" end="8"}
+                                <span><input name="work_day_check_1" type="checkbox" value="{$i}" text="{$week[$i]}">{$week[$i]}</span>
+                                {/for}
+                            </div>
+                            <div class="work_hour_1 hide" style="width: 480px; height: 44px;">
+                                <div style="width: 100px; height: 44px; margin-right: -4px; display: inline-block;margin-left:10px;">
+                                    <span><input name="work_hour_1" type="checkbox" value="24">24小时营业</span>
+                                    <span style="margin-left: 6px;"> | </span>
+                                </div>
+                                <div style="width: 350px; height: 44px; display: inline-block;">
+                                    <select id="start_hour_1" style="border-radius: 4px;">
+
+                                    </select>
+                                    <div class="work_hour_separator">至</div>
+                                    <select id="end_hour_1" style="border-radius: 4px;">
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="add_time" style="margin-left: 110px; margin-bottom: 15px; color: #3c8dbc;cursor: pointer; display: inline-block;">
+                添加营业时间
+            </div>
+            <input name="work_day_vals_1" type="hidden" value="{$business_hours.0.week ?? ''}">
+            <input name="work_hour_vals_1" type="hidden" value="{$business_hours.0.time ?? ''}">
+
+            <!-- 第二个时间段 -->
+             <div class="form-group business_hours_box_2" style="margin-left: 110px; display: none;">
+                <div class="col-xs-12 col-sm-8 l" style="margin-left:-15px;width: 800px;">
+                    <div class="col-xs-12 op business_hours_content_2" style="width: 480px; height: 76px; display: inline-block; border: 1px solid #ddd;">
+                        <div class="business_hours_title_2" style="width: 480px; height: 32px; margin-left: -15px;">
+                            <div class="work_day_title_2 active">营业日</div>
+                            <div class="work_hour_title_2">营业时段</div>
+                        </div>
+                        <div style="width: 480px; height: 44px; margin-left: -15px; line-height: 44px;">
+                            <div class="work_day_2" style="width: 480px; height: 44px;">
+                                <span><input name="work_day_check_all_2" type="checkbox" value="0"> 整周</span>
+                                <span> | </span>
+                                {for start="1" end="8"}
+                                <span><input name="work_day_check_2" type="checkbox" value="{$i}" text="{$week[$i]}">{$week[$i]}</span>
+                                {/for}
+                            </div>
+                            <div class="work_hour_2 hide" style="width: 480px; height: 44px;">
+                                <div style="width: 100px; height: 44px; margin-right: -4px; display: inline-block;">
+                                    <span><input name="work_hour_2" type="checkbox" value="24">24小时营业</span>
+                                    <span style="margin-left: 6px;"> | </span>
+                                </div>
+                                <div style="width: 350px; height: 44px; display: inline-block;margin-left:10px;">
+                                    <select id="start_hour_2" style="border-radius: 4px;">
+
+                                    </select>
+                                    <div class="work_hour_separator">至</div>
+                                    <select id="end_hour_2" style="border-radius: 4px;">
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input name="work_day_vals_2" type="hidden" value="{$business_hours.1.week ?? ''}" style="margin-left: 110px;">
+            <input name="work_hour_vals_2" type="hidden" value="{$business_hours.1.time ?? ''}">
+            
+            
+            
+            <div class="form-group">
+                <label for="desc" class="l control-label col-xs-12 col-sm-2"> 门店介绍：</label>
+                <div class="l col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <textarea id="desc" name="desc" class="form-control op col-xs-12" style="width: 400px;height: 90px;resize: none;">{$row.desc ?? ''}</textarea>
+                </div>
+            </div>
+                                  
+            <div class="form-group row">
+            <label for="c-img" class="control-label col-xs-12 col-sm-2 imgList_label"><span style="color: #ff777c;line-height: 100px;">*</span>门店预览图:</label>
+            <div class="col-xs-12 col-sm-10" id="picList">
+                <div class="l ac-img-container" id="imgList">
+                    <div class="os-row">
+                        {if isset($row.shop_album) && $row.shop_album neq ''}
+                        {volist name='row.shop_album' id='vo'}
+                        {if $i eq 1}
+                        <div class="formControls l mr-15 ta-imgItem ac-item-box" style="margin-bottom: 10px;">
+                            <sup></sup>
+                            <i class="os-radius"></i>
+                            <img class="os-img" src="{$Think.config.qiniu.domain}{$vo.image_url}" data-log="{$vo.image_url}">
+                        </div>
+                        {else}
+                        <div class="formControls l mr-15 ta-imgItem ac-item-box" style="margin-bottom: 10px;">
+                            <i class="os-radius"></i>
+                            <img class="os-img" src="{$Think.config.qiniu.domain}{$vo.image_url}" data-log="{$vo.image_url}">
+                        </div>
+                        {/if}
+                        {/volist}
+                        {/if}
+                        <div class="formControls l ta-imgItem ac-add" style="width: 100px;height: 100px;">
+                            <img class="os-pointer" src="__CDN__/assets/img/defaultAdd1.png" id="img_shop">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            {if (isset($row.is_user_status) && $row.is_user_status != 1) || $has_auth}
+		
+            <h2 class="title_h title_h2">门店认证信息</h2>
+            
+            <div class="form-group">
+                <label for="truename" class="control-label col-xs-12 col-sm-2">法人：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <!-- <div style="max-width:150px ;width:100%;display: inline-block;margin-right: 10px;"> -->
+                        <input id="truename" name="truename" class="form-control" type="text" style="display: inline-block;width: 150px; height: 36px;" value="{$row.truename ?? ''}">
+                    <!-- </div> -->
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="person_id_number" class="control-label col-xs-12 col-sm-2">法人身份证号：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <!-- <div style="max-width:200px ;width:100%;display: inline-block;margin-right: 10px;"> -->
+                        <input id="person_id_number" name="person_id_number" class="form-control" type="text" style="display: inline-block;width: 150px; height: 36px;" value="{$row.person_id_number ?? ''}">
+                    <!-- </div> -->
+                </div>
+            </div> 
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-2 cid_label" style="line-height: 100px;">法人身份证照片：</label>
+                <div class="col-xs-12 col-sm-8 id_box" style="margin-left:-15px;">
+                    <div id="person_img_p" class="l ac-img-container ac-img-url-box_person_img_p" data-name="person_img_p">
+                        {if isset($row.person_img_p) && $row.person_img_p != ''}
+                        <div class="formControls l mr-15 ta-imgItem ac-item-box">
+                            <i class="os-radius"></i>
+                            <img class="os-img" src="{$Think.config.qiniu.domain}{$row.person_img_p}" data-log="{$row.person_img_p}">
+                        </div>
+                        <div class="formControls l ta-imgItem ac-add hidden" style="width: 100px;height: 100px;">
+                            <img class="os-pointer" src="__CDN__/assets/img/img1.png" id="img_person_img_p" data-picture="0">
+                        </div>
+                        {else}
+                        <div class="os-row">
+                            <div class="formControls l ta-imgItem ac-add" style="width: 100px;height: 100px;">
+                                <img class="os-pointer" src="__CDN__/assets/img/img1.png" id="img_person_img_p" data-picture="0">
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-8 id_box" style="margin-left:-15px;">
+                    <div id="person_img_n" class="l ac-img-container ac-img-url-box_person_img_n" data-name="person_img_n">
+                        {if isset($row.person_img_n) && $row.person_img_n != ''}
+                        <div class="formControls l mr-15 ta-imgItem ac-item-box">
+                            <i class="os-radius"></i>
+                            <img class="os-img" src="{$Think.config.qiniu.domain}{$row.person_img_n}" data-log="{$row.person_img_n}">
+                        </div>
+                        <div class="formControls l ta-imgItem ac-add hidden" style="width: 100px;height: 100px;">
+                            <img class="os-pointer" src="__CDN__/assets/img/img2.png" id="img_person_img_n" data-picture="0">
+                        </div>
+                        {else}
+                        <div class="os-row">
+                            <div class="formControls l ta-imgItem ac-add" style="width: 100px;height: 100px;">
+                                <img class="os-pointer" src="__CDN__/assets/img/img2.png" id="img_person_img_n" data-picture="0">
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+                </div>
+            </div>                      
+            
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-2 cid_label" style="line-height: 100px;">法人手持身份证照片：</label>
+                <div class="col-xs-12 col-sm-8 id_box" style="margin-left:-15px;">
+                    <div id="license_img" class="l ac-img-container ac-img-url-box_person_img_s" data-name="person_img_s">
+                        {if isset($row.person_img_s) && $row.person_img_s != ''}
+                        <div class="formControls l mr-15 ta-imgItem ac-item-box">
+                            <i class="os-radius"></i>
+                            <img class="os-img" src="{$Think.config.qiniu.domain}{$row.person_img_s}" data-log="{$row.person_img_s}">
+                        </div>
+                        <div class="formControls l ta-imgItem ac-add hidden" style="width: 100px;height: 100px;">
+                            <img class="os-pointer" src="__CDN__/assets/img/img4.png" id="person_img_s" data-picture="0">
+                        </div>
+                        {else}
+                        <div class="os-row">
+                            <div class="formControls l ta-imgItem ac-add" style="width: 100px;height: 100px;">
+                                <img class="os-pointer" src="__CDN__/assets/img/img4.png" id="person_img_s" data-picture="0">
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="license_type" class="control-label col-xs-12 col-sm-2">营业执照类型：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <div class="s_type">
+                    	<input type="radio" name="license_type" value="1" {if isset($row.license_type) && $row.license_type eq 1}checked="checked"{/if} />
+                    	<span>企业法人</span>
+                    </div>
+                    <div class="s_type">
+                    	<input type="radio" name="license_type" value="2" {if isset($row.license_type) && $row.license_type eq 2}checked="checked"{/if} />
+                    	<span>个体工商户</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="license_name" class="control-label col-xs-12 col-sm-2">营业执照名称：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <!-- <div  style="max-width:200px ;width:100%;display: inline-block;margin-right: 10px;"> -->
+                        <input id="license_name" name="license_name" class="form-control" type="text" style="display: inline-block;width: 150px; height: 36px;" value="{$row.license_name ?? ''}">
+                    <!-- </div> -->
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="license_number" class="control-label col-xs-12 col-sm-2">营业执照号：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <!-- <div  style="max-width:200px ;width:100%;display: inline-block;margin-right: 10px;"> -->
+                        <input id="license_number" name="license_number" class="form-control" type="text" style="display: inline-block;width: 150px; height: 36px;" value="{$row.license_number ?? ''}">
+                    <!-- </div> -->
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-2 cid_label" style="line-height: 100px;">营业执照照片：</label>
+                <div class="col-xs-12 col-sm-8 id_box" style="margin-left:-15px;">
+                    <div id="license_img" class="l ac-img-container ac-img-url-box_businessLicense" data-name="license_img">
+                        {if isset($row.license_img) && $row.license_img != ''}
+                        <div class="formControls l mr-15 ta-imgItem ac-item-box">
+                            <i class="os-radius"></i>
+                            <img class="os-img" src="{$Think.config.qiniu.domain}{$row.license_img}" data-log="{$row.license_img}">
+                        </div>
+                        <div class="formControls l ta-imgItem ac-add hidden" style="width: 100px;height: 100px;">
+                            <img class="os-pointer" src="__CDN__/assets/img/img4.png" id="img_businessLicense" data-picture="0">
+                        </div>
+                        {else}
+                        <div class="os-row">
+                            <div class="formControls l ta-imgItem ac-add" style="width: 100px;height: 100px;">
+                                <img class="os-pointer" src="__CDN__/assets/img/img4.png" id="img_businessLicense" data-picture="0">
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+                    
+            <div class="form-group">
+                <label for="banksite" class="control-label col-xs-12 col-sm-2">开户行：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <!-- <div style="max-width:150px ;width:100%;display: inline-block;margin-right: 10px;"> -->
+                        <input id="banksite" name="banksite" class="form-control" type="text" style="display: inline-block;width: 150px; height: 36px;" value="{$row.banksite ?? ''}">
+                    <!-- </div> -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="bankcard" class="control-label col-xs-12 col-sm-2">银行账户：</label>
+                <div class="col-xs-12 col-sm-8" style="margin-left:-15px;">
+                    <!-- <div style="max-width:150px ;width:100%;display: inline-block;margin-right: 10px;"> -->
+                        <input id="bankcard" name="bankcard" class="form-control" style="display: inline-block;width: 150px; height: 36px;" type="text" value="{$row.bankcard ?? ''}">
+                    <!-- </div> -->
+                </div>
+            </div>
+            {/if}
+
+	
+            <div class="form-group">
+                <label for="submit" class="control-label col-xs-12 col-sm-2"></label>
+                <div class="col-xs-12" style="left: 110px;">
+                    <input id="submit" name="submit" type="submit" class="btn btn-success btn-embossed" value="保 存"></input>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="bg_box">
+	<div class="big_img">
+		<img src="http://p6afqc9lx.bkt.clouddn.com/upload/image/1526627488113.image"/>
+	</div>
+</div>
+
+<!-- 表单校验插件 -->
+<script type="text/javascript" charset="utf-8" src="__CDN__/assets/js/backend/jquery-validation-1.14.0/jquery.validate.js?v={$site.version}"></script>
+<script type="text/javascript" charset="utf-8" src="__CDN__/assets/js/backend/jquery-validation-1.14.0/additional-methods.js"></script>
+<!-- 营业时间插件 -->
+ <script type="text/javascript" src="__CDN__/assets/js/backend/business_hours/business_hours_1.js"></script>
+<script type="text/javascript" src="__CDN__/assets/js/backend/business_hours/business_hours_2.js"></script> 
+<!-- index的js -->
+<script type="text/javascript" src="__CDN__/assets/js/backend/validate/shops/edit_shop.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+	$(function(){
+		
+		$( "#imgList .os-row" ).sortable({
+    		containment: 'parent',
+    		cancel: '.ac-add',
+    		items: '.ac-item-box',
+    		stop:function(event,ui){    			
+    			$('#imgList .ac-item-box sup').remove();
+    			var list=$('#imgList .ac-item-box');
+    			var sup=$('<sup></sup>');
+    			list.eq(0).append(sup);
+    		}
+    	});
+		
+//		运营时间
+		(function(){
+			var day1=$('input[name="work_day_vals_1"]').val();
+			var day2=$('input[name="work_day_vals_2"]').val();
+			var hour1=$('input[name="work_hour_vals_1"]').val();
+			var hour2=$('input[name="work_hour_vals_2"]').val();
+			
+			if(hour1){
+				hour1=hour1.split('-');
+				if(hour1[0]=="0:00" && hour1[1]=="24:00"){
+					$('input[name="work_hour_1"]').attr('checked','true');
+					$('#start_hour_1').attr('disabled',"true");
+					$('#start_hour_1').css('background',"#DDDDDD");
+					$('#end_hour_1').css('background',"#DDDDDD");
+					$('#end_hour_1').attr('disabled',"true");
+				}else{
+					$('#start_hour_1').val(hour1[0]);
+					$('#end_hour_1').val(hour1[1]);
+				}			
+			}
+			
+			if(hour2){
+				hour2=hour2.split('-');
+				if(hour2[0]=="0:00" && hour2[1]=="24:00"){
+					$('input[name="work_hour_2"]').attr('checked','true');
+					$('#start_hour_2').attr('disabled',"true");
+					$('#start_hour_2').css('background',"#DDDDDD");
+					$('#end_hour_2').css('background',"#DDDDDD");
+					$('.business_hours_box_2').show();
+					$('.add_time').hide();
+				}else{					
+					$('#start_hour_2').val(hour2[0]);
+					$('#end_hour_2').val(hour2[1]);
+					$('.business_hours_box_2').show();
+					$('.add_time').hide();
+				}								
+			}
+			
+			if(day1){
+				
+				var dayList1=$('.work_day_1 input');
+				day1=day1.substr(0,day1.length-1);
+				day1=day1.split(',');
+				if(day1.length==7){
+					$("input[name='work_day_check_all_1']").attr("checked","true");
+				}
+				for(var i=0;i<day1.length;i++){
+					for(var y=0;y<dayList1.length;y++){
+						var value=dayList1.eq(y).val()
+						if(day1[i]==value){
+							dayList1.eq(y).attr("checked","true");
+						}
+					}
+				}
+			}			
+			if(day2){
+				var dayList2=$('.work_day_2 input');
+				day2=day2.substr(0,day2.length-1);
+				day2=day2.split(',');
+				if(day2.length==7){
+					$("input[name='work_day_check_all_2']").attr("checked","true");
+				}
+				for(var i=0;i<day2.length;i++){
+					for(var y=0;y<dayList2.length;y++){
+						var value=dayList2.eq(y).val()
+						if(day2[i]==value){
+							dayList2.eq(y).attr("checked","true");
+						}
+					}
+				}
+			}
+		}())
+		
+		
+	})
+			
+	$('.tel').blur(function(){		
+		var code=$("#code").val();
+		var number=$('#phone_number1').val();
+		if(code && number){
+			var phone_number1=code+'-'+number;
+			$('#tel').val(phone_number1)
+		}		
+	})
+//	图片放大预览
+    $(document).on('click','.os-img',function(){
+    	var img_url=$(this).attr('src');
+    	$('.bg_box img').attr('src',img_url);
+    	$('.bg_box').show();   	
+    	$('.bg_box').click(function(){
+			$('.bg_box').hide();
+		})
+    })
+    
+    $('#divUL').on('click','img',function(){
+    	var img_url=$(this).attr('src');
+    	$('.bg_box img').attr('src',img_url);
+    	$('.bg_box').show();   	
+    	$('.bg_box').click(function(){
+			$('.bg_box').hide();
+		})
+    })
+	
+	
+    // 选择分类弹窗
+    function changeTypes() {
+        var url = '<?php echo url("shops/types") . "?shop_id=" . (empty($data["id"]) ? "": $data["id"]);?>';
+        layer_open('选择分类', url, {w:'745px',h:'815px'});
+    }
+    
+    // 图片删除方法
+    $(document).on("click", ".os-radius", function () {
+        var os = $(this).parent();        
+        var add = os.nextAll(".ac-add");
+        os.remove();
+
+        var isMain = $(".ac-item");
+
+        if (os.children("sup").length != 0 && isMain.length > 0) {
+            $(isMain[0]).prepend("<sup></sup>");
+        }
+
+        if (add.hasClass("hidden")) {
+            add.removeClass("hidden");
+        }
+    });
+    
+    $('#picList').on("click", ".os-radius", function () {
+    	var length=$('#picList .os-radius').length;
+    	var index=$(this).parent().index();
+    	if(index==0 && index!=(length-1)){
+    		var next=$(this).parent().next();
+    		var sup=$('<sup></sup>')
+    		next.append(sup)
+    	}
+    })
+
+    // 获取门店预览图地址
+//  up_img_System("img_shop");
+    up_img_System("img_shop","100");
+	    
+    // 获取营业执照照片地址
+    up_img_System("img_businessLicense");
+
+    // 获取法人身份证正面照
+    up_img_System("img_person_img_p");
+
+    // 获取法人身份证反面照片地址
+    up_img_System("img_person_img_n");
+    // 获取法人手持身份证照片地址
+    up_img_System("person_img_s");
+</script>

@@ -1,0 +1,71 @@
+ *:before,
+        *:after {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        .row:after,
+        .container:after {
+            display: table;
+            content: '';
+            clear: both;
+        }
+        .row:before,
+        .container:before {
+            display: table;
+            content: '';
+        }
+        .container {
+            margin: 0 auto;
+        }
+        body {
+            font-family: "微软雅黑", "SimHei", "NSimSun", "PMingLiU", sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        #news .shop-info {
+            padding: 0.3rem;
+        }
+        #news {
+            background-color: #fff;
+        }
+        #news .h1 {
+            display: block;
+            font-size: 0.3rem;
+            padding-top: 0.05rem;
+            color: #282828;
+            height: 1.428em;
+            overflow: hidden;
+            white-space: nowrap;
+            -ms-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+        }
+        #news .n-time-box {
+            margin-top: 0.2rem;
+            padding-bottom: 0.16rem;
+            border-bottom: 1px solid #dddddd;
+        }
+        #news .n-time-box .n-lf {
+            float: left;
+        }
+        #news .n-time-box .n-rt {
+            float: right;
+            text-align: right;
+        }
+        #news .n-time-box span {
+            width: 50%;
+            height: 1.428em;
+            color: #999999;
+            font-size: 0.22rem;
+        }
+        #news .n-content-box {
+            font-size: 0.26rem;
+            padding: 0.2rem 0;
+        }
+        #news .n-content-box img {
+            max-width: 100%;
+        }
+        #news .n-content-box p {
+            // max-width: 100%;
+            text-indent: 0 !important;
+        }

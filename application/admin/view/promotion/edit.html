@@ -1,0 +1,194 @@
+<link rel="stylesheet" type="text/css" href="__CDN__/assets/libs/laydate/need/laydate.css?v={$site.version}"/>
+<!-- <script type="text/javascript" src="__CDN__/assets/libs/laydate/laydate.js"></script> -->
+<script type="text/javascript" src="__CDN__/assets/libs/laydate5/laydate.js"></script>
+
+
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" style="overflow-x: hidden;">
+    <input id="c-id" name="" type="hidden" value="{$row.id ?? ''}">
+    <input id="region_id" name="" type="hidden" value="{$row.region_id_3 ?? ''}">
+    <input id="circle_id" name="" type="hidden" value="{$row.region_id_4 ?? ''}">
+    <input id="c_shop_id" name="" type="hidden" value="{$row.shop_id ?? ''}">
+
+    <div class="form-group" style="margin-top: 20px;">
+        <label class="l control-label col-sm-2" style="display: inline-block;line-height: 36px;text-align: right;width: 140px;"><span style="color: #ff777c;">*</span>选择区域：</label>
+        <div class="l col-sm-8" style="display: inline-block; margin-left: -15px;height: 46px;">
+            <div class="l" style="margin-right: 10px; display: inline-block;">
+                <select class="form-control title-input" id="region" name="region" style="width: 180px; height: 36px; border-radius: 4px;">
+                    <option value="">区</option>
+                </select>
+            </div>
+            <div class="l" style="margin-right: 10px; display: inline-block;">
+                <select class="form-control title-input" id="circle" name="circle" v-model="circle" style="width: 180px; height: 36px; border-radius: 4px;">
+                    <option value="">商圈</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group" style="margin-top: 20px;">
+        <label for="shop_id" class="l control-label col-sm-2" style="display: inline-block;line-height: 36px;text-align: right;width: 140px;"><span style="color: #ff777c;">*</span>选择门店：</label>
+        <div class="l col-sm-8" style="display: inline-block; margin-left: -15px;height: 46px;">
+            <select id="shop_id" name="shop_id" class="form-control" style="width: 180px; height: 36px; border-radius: 4px;">
+                <option value="">请选择门店</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="form-group" style="margin-top: 20px;">
+        <label for="time" class="control-label l col-sm-2" style="display: inline-block;line-height:36px;text-align: right;width: 140px;"><span style="color: #ff777c;">*</span>时间范围：</label>
+        <div class="l col-sm-8" style="display: inline-block; margin-left: -15px;height: 46px;">
+            <div class="input-group">
+                <input id="time" name="time" placeholder="搜索时间区间" class="input-text laydate-icon os-pl-10" value="<?php if(!empty($row['start_time']) && !empty($row['end_time'])) echo strstr($row['start_time'], ' ', true) . ' - ' . strstr($row['end_time'], ' ', true);?>" style="width: 370px; height: 36px;padding-left: 8px;font-size: 12px;border:1px solid #d2d6de; border-radius: 4px;" type="text" onfocus="this.blur()"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 20px;">
+        <label for="c-title" class="control-label l col-sm-2" style="display: inline-block;line-height:36px;text-align: right;width: 140px;"><span style="color: #ff777c;">*</span>活动名称：</label>
+        <div class="l col-sm-8" style="display: inline-block; margin-left: -15px;height: 46px;">
+            <div>
+                <input id="c-title" name="c-title" placeholder="请输入活动名称" class="form-control" style="width: 370px; height: 36px; display: inline-block; border-radius: 4px;" name="" type="text" value="{$row.title ?? ''}">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 20px;">
+        <label class="control-label l col-sm-2" style="display: inline-block;line-height:100px;text-align: right;width: 140px;"><span style="color: #ff777c;">*</span>活动详情图：</label>
+        <div class="l col-sm-8" style="display: inline-block; margin-left: -15px;">
+            <div id="preview_image" class="ac-img-container ac-img-url-box" data-name="preview_image">
+                {if isset($row['content']) && $row['content'] != ''}
+                <div class="formControls mr-15 ta-imgItem ac-item-box">
+                    <i class="os-radius"></i>
+                    <img class="os-img" src="{$Think.config.qiniu.domain}{$row['content']}" data-log="{$row['content']}">
+                </div>
+                <div class="formControls ta-imgItem ac-add hidden" style="width: 100px;height: 100px;">
+                    <img class="os-pointer" src="__CDN__/assets/img/defaultAdd1.png" id="img" data-picture="0">
+                </div>
+                {else}
+                <div class="os-row">
+                    <div class="formControls ta-imgItem ac-add" style="width: 100px;height: 100px;">
+                        <img class="os-pointer" src="__CDN__/assets/img/defaultAdd1.png" id="img" data-picture="0">
+                    </div>
+                </div>
+                {/if}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 20px;">
+        <label for="c-desc" class="control-label l col-sm-2" style="display: inline-block; line-height: 90px;text-align: right; width: 140px;"><span style="color: #ff777c;">*</span>活动描述：</label>
+        <div class="l col-sm-8" style="display: inline-block; margin-left: -15px;height: 53px;">
+            <div>
+                <textarea id="c-desc" name="c-desc" class="form-control op col-xs-12" maxlength="8" placeholder="活动描述" style="width: 370px;height: 90px;resize: none; border-radius: 4px;"><?php if (!empty($row['desc'])) echo $row['desc'];?></textarea>
+            </div>
+         </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 20px;">
+        <label class="control-label l col-sm-2" for="c-name" style="display: inline-block;line-height:36px;text-align: right;width: 140px;">状态：</label>
+        <div class="l col-sm-8" style="display: inline-block; margin-left: -15px;height: 46px;">
+            <div class="radio" style="display: inline-block;">
+                <label class="l" for="status_open"><input <?php if(!isset($row['status']) || $row['status'] == 1) echo 'checked';?> id="status_open" name="c-status" type="radio" value="1" style="display: inline-block;"> 启用</label>
+                <label class="l" for="status_close"><input <?php if(isset($row['status']) && $row['status'] == 0) echo 'checked';?> name="c-status" id="status_close" type="radio" value="0" style="display: inline-block;"> 停用</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group" style="text-align: center; margin-top: 20px;">
+        <input id="submit" type="submit" class="btn btn-success btn-embossed title-input" value="保 存" style="width: 100px;line-height: 36px; padding: 0; background-color: #34c191"></input>
+    </div>
+</form>
+
+<!-- <script type="text/javascript" charset="utf-8" src="__CDN__/assets/js/backend/error_msg.js?v={$site.version}"></script> -->
+<!-- 表单校验插件 -->
+<script type="text/javascript" charset="utf-8" src="__CDN__/assets/js/backend/jquery-validation-1.14.0/jquery.validate.js?v={$site.version}"></script>
+<script type="text/javascript" charset="utf-8" src="__CDN__/assets/js/backend/jquery-validation-1.14.0/additional-methods.js"></script>
+<script type="text/javascript" src="__CDN__/assets/js/backend/validate/promotion/edit.js"></script>
+
+<script>
+    var regionsJson = <?php echo json_encode($region_data);?>;
+    var shopsJson = <?php echo json_encode($shop_list);?>;
+    function show_shops(id,level) {
+        var cur_shop_id = $("#c_shop_id").val();
+        var level_text = '';
+        if(typeof level=="undefined" || level==3) {
+            level_text='region_id_3'
+        }else if(level==4) {
+            level_text='region_id_4'
+        }
+        var shop_id = $("#shop_id");
+        shop_id.empty();
+        var html = '<option value="">请选择门店</option>';
+        var selected = '';
+        $.each(shopsJson,function(index,val) {
+            if(val[level_text]==id) {
+                if(cur_shop_id==val.id) {
+                    selected = 'selected="selected"';
+                }else{
+                    selected = '';
+                }
+                html = html + '<option '+selected+' value="'+val.id+'">'+val.name+'</option>';
+            }
+        })
+        shop_id.append(html);
+    }
+
+    laydate.render({
+        elem: '#time'
+        ,range: true
+        ,value: "{$Request.get.from_time ?? ''}"
+    });
+
+    // 活动详情图上传
+    up_img_System("img");
+    $(".ac-img-container").on("click", ".os-radius", function () {
+        var os = $(this).parent();
+        var add = os.nextAll(".ac-add");
+        os.remove();
+        var isMain = $(".ac-item");
+        if (os.children("sup").length != 0 && isMain.length > 0) {
+            $(isMain[0]).prepend("<sup></sup>");
+        }
+        if (add.hasClass("hidden")) {
+            add.removeClass("hidden");
+        }
+    });
+
+    var cur_id = $("#region_id").val();
+    var spare_id = [$("#circle_id").val()];
+    iteration_linkage(regionsJson,{cur_element_str:'region',cur_id:cur_id,spare_id:spare_id,spare_element_str:['circle'],is_fun_1:true,spare_fun:[true]});
+    $("#region").on("change", function () {
+        var val_id = $(this).val();
+        $("#circle").html('<option value="">商圈</option>');
+        $.each(regionsJson, function (index, val) {
+            console.log(val)
+            if (val.id == val_id) {
+                if (val.child) {
+                    iteration_linkage(val.child, {cur_element_str: 'circle', is_replace: true, replace_name: '商圈'});
+                } else {
+                }
+            }
+        });
+        show_shops(val_id, 3);
+    });
+    $("#circle").on("change", function () {
+        var val_id = $(this).val();
+        if(val_id!==''){
+            show_shops(val_id, 4);
+        }else {
+            show_shops($('#region').val(), 3);
+        }
+    });
+</script>
+
+<style type="text/css">
+    /*校验字体样式*/
+    span.error{
+        /*border: 1px solid red;*/
+        color: red;
+        margin-top: 1.5px;
+        height: 28px;
+        font-size: 12px;
+        display: block;
+    }
+</style>

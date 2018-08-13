@@ -1,0 +1,79 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="" style="background-color: #fff;">
+    <div class="help-form-box" style="padding: 30px 45px 0 45px;height: 388px;">
+        <input id="c-id" data-rule="required" class="form-control" name="" type="hidden" value="{$row.id ?? ''}">
+        <div class="form-group" style="margin-bottom: 0;">
+            <label for="c-name" class="control-label lf" style="width: 75px;line-height:36px;margin-bottom: 0;"><span style="color: #ff777c;">*</span> 品牌名称:</label>
+            <div  style="height: 56px;padding-left: 75px;">
+                <input id="c-name" name="c-name" class="form-control" type="text" value="{$row.name ?? ''}" style="border-radius: 4px;">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="c-image" class="control-label lf" style="width: 75px;line-height:100px;"><span style="color: #ff777c;">*</span> 品牌logo:</label>
+            <div class="lf"  style="width: 265px;">
+                <div class="l ac-img-container ac-img-url-box"  data-name="image">
+                    {if isset($row.logo) && $row.logo != ''}
+                    <div class="formControls l mr-15 ta-imgItem ac-item-box">
+                        <i class="os-radius"></i>
+                        <img class="os-img" src="{$Think.config.qiniu.domain}{$row.logo}" data-log="{$row.logo}">
+                    </div>
+                    <div class="formControls l ta-imgItem ac-add hidden" style="width: 100px;height: 100px;">
+                        <img class="os-pointer" src="__CDN__/assets/img/defaultAdd.png" id="img" data-picture="0">
+                    </div>
+                    {else}
+                    <div class="os-row">
+                        <div class="formControls l ta-imgItem ac-add" style="width: 100px;height: 100px;">
+                            <img class="os-pointer" src="__CDN__/assets/img/defaultAdd.png" id="img" data-picture="0">
+                        </div>
+                    </div>
+                    {/if}
+                </div>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top: 25px;margin-bottom: 0;">
+            <label for="c-desc" class="control-label lf"  style="width: 75px;line-height:90px;"><span style="color: #ff777c;">*</span> 品牌描述:</label>
+            <div class="l" style="width: 265px;">
+                <div style="height: 110px;">
+                    <textarea id="c-desc" name="c-desc" class="form-control" style="height: 90px; resize: none; border-radius: 4px;"><?php echo !isset($row['desc']) ? '': htmlspecialchars_decode($row['desc']);?></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div style="text-align: center;">
+                <input id="submit" type="submit" class="btn btn-success btn-embossed disabled" value="保 存" style="margin-right: 20px;padding-left: 30px;padding-right: 30px;background-color: #34c191;"></input>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- 表单校验插件 -->
+<script type="text/javascript" charset="utf-8" src="__CDN__/assets/js/backend/jquery-validation-1.14.0/jquery.validate.js?v={$site.version}"></script>
+<script type="text/javascript" charset="utf-8" src="__CDN__/assets/js/backend/jquery-validation-1.14.0/additional-methods.js"></script>
+<script type="text/javascript" src="__CDN__/assets/js/backend/validate/sysconf/brand/edit.js"></script>
+
+<script>
+        // 品牌logo图片
+        up_img_System("img");
+        $("#edit-form").on("click", ".ac-item-box i", function () {
+            var os = $(this).parent();
+            var add = os.nextAll(".ac-add");
+            os.remove();
+            var isMain = $("#edit-form .ac-item");
+            if (os.children("sup").length != 0 && isMain.length > 0) {
+                $(isMain[0]).prepend("<sup></sup>");
+            }
+            if (add.hasClass("hidden")) {
+                add.removeClass("hidden");
+            }
+        });
+</script>
+
+<style type="text/css">
+    /*校验字体样式*/
+    span.error{
+        /*border: 1px solid red;*/
+        color: red;
+        margin-top: 1.5px;
+        height: 28px;
+        font-size: 12px;
+    }
+</style>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <title>资讯详情</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">    
+    <!-- <link rel="stylesheet" href="/assets/css/share/reset.css"> -->
+    <link rel="stylesheet" href="/assets/css/share/shop.css">
+    <link rel="stylesheet" href="/assets/css/share/news.css">
+    <script src="/assets/js/share/rem.js"></script>
+</head>
+
+<body>
+    <div class="container" id="news">
+        <div class="header">
+            <img src="/assets/img/logo.png" alt="">
+            <a href="https://{$Think.config.url_prefix_www ?? ''}.{$Think.config.url_domain_root}/app_download/">
+                下载APP
+            </a>
+        </div>
+        <div class="shop-info">
+            <b class="h1">{$data.title ?? '详情'}</b>
+            <div class="n-time-box row">
+                <span class="n-lf">来源：{$data.author ?? '千寻狗'}</span>
+                <span class="n-rt">{$data.create_time}</span>
+            </div>
+            <div class="n-content-box">
+                <?php echo htmlspecialchars_decode($data['content']);?>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="/assets/js/share/scroll.js"></script>
+</html>

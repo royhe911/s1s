@@ -1,0 +1,302 @@
+<link rel="stylesheet" type="text/css" href="__CDN__/assets/libs/laydate/need/laydate.css?v={$site.version}"/>
+<!-- <script type="text/javascript" src="__CDN__/assets/libs/laydate/laydate.js"></script> -->
+<script type="text/javascript" src="__CDN__/assets/libs/laydate5/laydate.js"></script>
+<style>
+    .contain {
+        height: 100vh;
+        background-color: #fff;
+    }
+</style>
+
+<div class="panel-heading row" style="padding:0 15px;color: #999;font-size: 12px; line-height: 50px; background-color: transparent">
+    <!-- <div class="panel-lead"><em>门店分类管理</em></div> -->
+    <div style="background-color: #e8edf0;width: 100%; height: 50px;padding-left: 15px">
+        <div class="lf">
+            <i class="fa fa-home" style="font-size: 14px;"></i>
+        </div>
+        <div class="panel-lead lf" style="margin: 0px;">系统配置&nbsp;&nbsp;&nbsp;> </div>
+        <a href="{:url('sysconf/adverts/index')}" class="panel-lead lf" style="margin: 0px; color: #999 !important;"> &nbsp;&nbsp;&nbsp;广告管理&nbsp;&nbsp;&nbsp;> </a>
+        <div class="panel-lead lf pl" style="margin: 0px;color: #34c191;">&nbsp;&nbsp;&nbsp;{if isset($row)}编辑广告{else}新增广告{/if}</div>
+    </div>
+</div>
+<div class="panel-body" id='panel-body' style="height: 90vh;">
+    <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+        <input id="c-id" data-rule="required" class="form-control" name="" type="hidden" value="{$row.id ?? ''}">
+        <div class="form-group">
+            <label for="c-name" class="control-label col-xs-12 col-sm-2"><span style="color: #ff777c;">*</span>广告名称:</label>
+            <div class="col-xs-12 col-sm-8">
+                <div   class="ac-event-box" data-msg-empty="请输入广告名称不能为空" style="max-width:150px ;width:100%;display: inline-block;margin-right: 10px;">
+                    <input id="c-title" data-rule="required" class="form-control ac-input" maxlength="40" type="text" value="{$row.title ?? ''}">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="c-description" class="control-label col-xs-12 col-sm-2"><span style="color: #ff777c;">*</span>广告位置:</label>
+            <div class="col-xs-12 col-sm-8">
+                 <select class="form-control op" required="" name="c-device" id="c-device" style="margin-bottom:10px;">
+                     <!--<option value="1" {if isset($row) && $row.device eq 1}selected{/if}>Android</option>-->
+                     <!--<option value="2" {if isset($row) && $row.device eq 2}selected{/if}>IOS</option>-->
+                     <option value="3" {if isset($row) && $row.device eq 3}selected{/if}>小程序</option>
+                     <option value="4" {if isset($row) && $row.device eq 4}selected{/if}>PC</option>
+                 </select>
+                <select class="form-control op" required="" name="c-device" id="c-position" style="margin-bottom:10px;">
+                     <!--<option value="1" {if isset($row) && $row.device eq 1}selected{/if}>Android</option>-->
+                     <!--<option value="2" {if isset($row) && $row.device eq 2}selected{/if}>IOS</option>-->
+                     <!--<option value="3" {if isset($row) && $row.device eq 3}selected{/if}>小程序</option>-->
+                     <option value="1" {if isset($row) && $row.position eq 1}selected{/if}>首页</option>
+                     <option value="2" {if isset($row) && $row.position eq 2}selected{/if}>门店详情</option>
+                 </select>
+                <select class="form-control op" required="" name="c-device" id="c-sub_id" style="margin-bottom:10px;display: none;">
+                     <!--<option value="1" {if isset($row) && $row.device eq 1}selected{/if}>Android</option>-->
+                     <!--<option value="2" {if isset($row) && $row.device eq 2}selected{/if}>IOS</option>-->
+                     <!--<option value="3" {if isset($row) && $row.device eq 3}selected{/if}>小程序</option>-->
+                    {volist name='special_list' id='vo'}
+                     <option value="{$key}" {if isset($row) && $row.sub_id eq $key}selected{/if}>{$vo}</option>
+                     {/volist}
+                 </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="c-name" class="control-label col-xs-12 col-sm-2" style="display: inline-block;line-height:36px;text-align: right;width: 140px;"><span style="color: #ff777c;">*</span>时间范围：</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="input-group ac-error-box">
+                    <input placeholder="搜索时间区间" class="input-text laydate-icon os-pl-10" value="{$from_time ?? ''}" style="width: 200px; height: 36px;padding-left: 8px;font-size: 12px;border:1px solid #d2d6de" type="text" id="from_time" onfocus="this.blur()"/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2" style="line-height: 100px;"><span style="color: #ff777c;">*</span>广告图片:</label>
+            <div class="l ac-img-container ac-img-url-box" data-name="image">
+                {if isset($row.image_url) && $row.image_url != ''}
+                <div class="formControls l mr-15 ta-imgItem ac-item-box">
+                    <i class="os-radius"></i>
+                    <img class="os-img" src="{$Think.config.qiniu.domain}{$row.image_url}" data-log="{$row.image_url}">
+                </div>
+                <div class="formControls l ta-imgItem ac-add hidden" style="width: 100px;height: 100px;">
+                    <img class="os-pointer" src="__CDN__/assets/img/defaultAdd.png" id="img" data-picture="0">
+                </div>
+                {else}
+                <div class="os-row">
+                    <div class="formControls l ta-imgItem ac-add" style="width: 100px;height: 100px;">
+                        <img class="os-pointer" src="__CDN__/assets/img/defaultAdd.png" id="img" data-picture="0">
+                    </div>
+                </div>
+                {/if}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="c-name" class="control-label col-xs-12 col-sm-2"><span style="color: #ff777c;">*</span>广告链接:</label>
+            <div class="col-xs-12 col-sm-8">
+                <div   class="ac-event-box" data-msg-empty="请输入链接地址不能为空" style="max-width:150px ;width:100%;display: inline-block;margin-right: 10px;">
+                    <input id="c-to_url" class="form-control op ac-input" maxlength="200" name="" type="text" value="{$row.to_url ?? ''}">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2"></label>
+            <div class="col-xs-12 col-sm-8">
+                <button type="button" class="btn btn-success btn-ok btn-embossed">保 存</button>
+                <!--<button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>-->
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" charset="utf-8" src="__CDN__/assets/js/backend/error_msg.js?v={$site.version}"></script>
+<script>
+    (function () {
+    	var device_val=$('#c-device').find('option:selected').val();
+    	var position_val=$('#c-position').find('option:selected').val();
+    	if(device_val=='4' && position_val=='1'){
+    		$('#c-sub_id').show();
+    	}else{
+    		$('#c-sub_id').hide();
+    	}
+    	$('select').change(function(){
+    		var device_val=$('#c-device').find('option:selected').val();
+	    	var position_val=$('#c-position').find('option:selected').val();
+	    	if(device_val=='4' && position_val=='1'){
+	    		$('#c-sub_id').show();
+	    	}else{
+	    		$('#c-sub_id').hide();
+	    	}
+    	})
+    	
+    	
+        $(".ac-number").on("input", function () {
+            fun.inputNumber($(this));
+        });
+
+        //上传图片以及删除处理
+        up_img_System("img");
+        $("#edit-form").on("click", ".ac-item-box i", function () {
+            var os = $(this).parent();
+            var add = os.nextAll(".ac-add");
+            os.remove();
+            var isMain = $("#edit-form .ac-item");
+            if (os.children("sup").length != 0 && isMain.length > 0) {
+                $(isMain[0]).prepend("<sup></sup>");
+            }
+            console.log(add.length);
+            if (add.hasClass("hidden")) {
+                add.removeClass("hidden");
+            }
+        });
+
+        //调用防错处理,start
+        //公共的弹出框样式
+        var public_style_error = {
+            display: 'inline-block',
+            'line-height': '34px',
+            height: '34px',
+            overflow: 'inherit'
+        };
+        // 输入框的必填项调用
+        fun.error_msg_clear({element: true}, public_style_error);
+        //非必填输入框和div,select的防错处理
+        fun.error_clear_box();
+        //调用防错处理结束
+        function validate_title(id,is_focus) {
+            var title = id;
+            var title_p = title.parents(".ac-event-box");
+            var title_val = title.val();
+            var title_obj = {
+                element: title,
+                element_info: title_p
+            };
+            if(is_focus) {
+                title_obj.msg = title_p.attr("data-msg-empty");
+                if (!fun.error_msg_create_input(title_obj, public_style_error)) {
+                    return ;
+                }
+            }else{
+                title_obj.is_focus = false;
+            }
+            title_obj.msg = "您输入的轮播名称过短";
+            title_obj.type = "distance_limit_short";
+            title_obj.str_length = 2;
+            if (!fun.error_msg_create_input(title_obj, public_style_error)) {
+                return ;
+            }
+            title_obj.msg = "您输入的轮播名称过长";
+            title_obj.type = "distance_limit_long";
+            title_obj.str_length = 40;
+            if (!fun.error_msg_create_input(title_obj, public_style_error)) {
+                return ;
+            }
+            title_obj.type = "reg";
+            title_obj.is_reg = true;
+            title_obj.msg = "您的输入的轮播名称中有非法字符串";
+            if (!fun.error_msg_create_input(title_obj, public_style_error)) {
+                return ;
+            }
+            return title_val;
+        }
+
+        function validate_http(id,is_focus) {
+            //链接地址：
+            var url = id;
+            var url_p = url.parents(".ac-event-box");
+            var url_val = url.val();
+            var url_obj = {
+                element: url,
+                element_info: url_p
+            };
+            if(is_focus) {
+                url_obj.msg = url_p.attr("data-msg-empty");
+                if (!fun.error_msg_create_input(url_obj, public_style_error)) {
+                    return ;
+                }
+            }else{
+                url_obj.is_focus = false;
+            }
+            url_obj.msg = "您输入的链接地址过长";
+            url_obj.type = "distance_limit_long";
+            url_obj.str_length = 200;
+            if (!fun.error_msg_create_input(url_obj, public_style_error)) {
+                return ;
+            }
+            return url_val;
+        }
+
+        //对轮播名称 验证
+        $("#c-title").on("blur", function () {
+            validate_title($(this));
+        });
+
+        //对链接地址 验证
+        $("#c-to_url").on("blur", function () {
+            validate_http($(this));
+        });
+
+        $('.btn-ok').on("click", function () {
+            var msg = {};           
+            msg.id = $('#c-id').val();
+
+            // 广告名称 ,并验证轮播图名称：
+            var title = validate_title($("#c-title"), true);
+            if(typeof title=="string"){
+                msg.title = title;
+            }else{
+                return;
+            }
+            //位置:
+            msg.type = $('#c-type').val();
+
+            // 获取上传轮播图片地址
+            var img_box = $(".ac-img-url-box");
+            var img_item_box, img_item, img_name;
+            for (var i = 0; i < img_box.length; i++) {
+                img_item_box = $(img_box[i]);
+                img_name = img_item_box.attr("data-name");
+                img_item = img_item_box.find(".ac-item-box img");
+                if (img_item.length > 0) {
+                    msg.image_url = img_item.attr("data-log");
+                } else {
+                    img_box.find("input[type='file']").focus();
+                    layer.msg('请上传广告图片');
+                    return;
+                }
+            }
+            var from_time = $('#from_time').val();
+            msg.from_time = from_time;
+
+            //链接地址 验证：
+            var to_url = validate_http($("#c-to_url"), true);
+            if(typeof to_url=="string"){
+                msg.to_url = to_url;
+            }else{
+                return;
+            }
+
+            var device = $('#c-device').val();
+            msg.device = device;
+
+            var position = $('#c-position').val();
+            msg.position = position;
+
+           if(device=='4' && position=='1'){
+           	   var sub_id = $('#c-sub_id').val();
+               msg.sub_id = sub_id;
+           }
+
+            $.post('', msg, function (data) {
+                if (data.code == 1) {
+                    layer.msg(data.msg, {
+                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function () {
+                        window.parent.location.reload();
+                    });
+                } else {
+                    layer.msg(data.msg);
+                }
+            })
+        });
+    })();
+
+    laydate.render({
+        elem: '#from_time'
+        ,range: true
+        ,value: "{$Request.get.from_time ?? ''}"
+    });
+</script>

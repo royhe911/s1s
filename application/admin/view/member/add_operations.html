@@ -1,0 +1,137 @@
+
+<link href="__CDN__/assets/css/page.css" rel="stylesheet" type="text/css">
+
+<style>
+	body{
+		padding-top:30px;
+		background:#fFf;
+	}
+    .mk-eq_width_left {
+        text-align: right !important;
+        width: 130px;
+    }
+    .form-horizontal .form-label {
+        text-align: right;
+    }
+    .os-right{
+        padding-left: 95px;
+        padding-right: 40px;
+        height: 56px;
+    }
+    .os-w-all{
+        width: 100% !important;
+    }
+    .text-c{
+        text-align: center;
+    }
+    .user_img_box .formControls{
+        background: #f8f8f8;
+    }
+    .title-input{
+    	width:120px!important;
+    	height:36px!important;
+    }
+</style>
+<div class="panel-body" id='panel-body'>
+    <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" >
+        <input id="c-id" data-rule="required" class="form-control" name="" type="hidden" value="{$row.id ?? ''}">
+        <div class="page-container">           
+            <div class="row cl os-pl-20 os-mt-10">
+                <label class="form-label l mk-eq_width_left">用户名称：</label>
+                <div class="formControls os-right">
+                    <input type="text" class="form-control op os-w-all os-pl-10 ac-input" maxlength="10" data-msg-empty="用户名称不能为空" placeholder="请输入用户名称" id="nickname" value="{$member_processor.nickname}">
+                </div>
+            </div>
+            <div class="clearfix" style="margin-top:20px;">
+            	<label class="form-label l mk-eq_width_left"> 所在城市： </label>
+            	<div style="float: left;width: 120px; height: 36px; margin-right: 10px;margin-left:20px;">
+                    <select class="form-control title-input" name="region_id_1" id="region_id_1" onchange='javascript:get_type("region_id_2", this.value, 0)'>
+                        <option value="">省</option>
+                        {volist name='province_list' id='vo'}
+                        <option value="{$vo.region_id}" {if $region_id_1 eq $vo.region_id}selected{/if}>{$vo.name}</option>
+                        {/volist}
+                    </select>
+                </div>
+                <div style="float: left;width: 120px; height: 36px; margin-right: 10px;">
+                    <select class="form-control title-input" name="region_id_2" id="region_id_2">
+                        <option value="">市</option>
+                    </select>
+                </div>
+            </div>
+            <p class="error" style="padding-left:100px;color:red;line-height:30px;display: none;">请填写完整信息</p>
+            <div class="text-c mt-20" style="margin-top:40px;">
+                <span type="button" class="btn btn-success btn-ok btn-embossed disabled" style="width: 100px;line-height: 36px; padding: 0; background-color: #34c191">保 存</span>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" charset="utf-8" src="__CDN__/assets/js/backend/error_msg.js?v={$site.version}"></script>
+<script type="text/javascript" src="__CDN__/assets/libs/laydate5/laydate.js"></script>
+<script>
+    (function () {
+        $('.btn-ok').on("click",function () {
+        	var name=$('#nickname').val();
+        	var province=$('#region_id_1').val();
+        	var city=$('#region_id_2').val();
+        	if(name && province && city){
+          		$.post('', {region_id_1: $('#region_id_1').val(),region_id_2: $('#region_id_2').val(), nickname: $('#nickname').val()}, function (data) {
+	                if (data.code == 1) {
+	                    layer.msg(data.msg, {
+	                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	                    }, function () {
+	                        window.parent.location.reload();
+	                    });
+	                } else {
+	                    layer.alert(data.msg, {icon: 5});
+	                }
+	            })
+        	}else{
+        		$('.error').show();
+        	}        	
+        })
+        
+        $('select').change(function(){       	
+        	$('.error').hide();        
+        })
+        $('#nickname').focus(function(){
+        	$('.error').hide();
+        })
+        $('#nickname').blur(function(){
+        	var name=$(this).val();
+        	if(name){
+        		$('.error').hide();
+        	}else{
+        		$('.error').show();
+        	}
+        })
+    })();
+
+    function get_type (objId, pid, t, id,content) {
+        $('#'+objId).empty();
+        if (t<1) {
+            if(typeof content=="undefined") {
+                content = "请选择";
+            }
+            $('#'+objId).html('<option value="">'+content+'</option>');
+            if(pid == 0) return;
+        }
+        var html = [];
+        $.post("/member/get_city", {pid: pid}, function (data) {
+            html.push('<option value="">请选择</option>');
+            if (data.code == 1 && data.data.length>0) {
+                var opts = null;
+                for (var i=0; i<data.data.length; i++) {
+                    opts = data.data[i];
+                    html.push('<option value="'+opts.id+'" '+((id==opts.id)?'selected':'')+'>'+opts.name+'</option>');
+                }
+            }
+            $('#'+objId).html(html.join(''));
+        }, 'json');
+    }
+    $(function () {
+        {notempty name='region_id_1'}
+        get_type("region_id_2", '{$region_id_1}', 0, '{$region_id_2}');
+        {/notempty}
+    })
+
+</script>

@@ -1,0 +1,146 @@
+<link rel="stylesheet" type="text/css" href="__CDN__/assets/libs/laydate/need/laydate.css?v={$site.version}"/>
+<div class="panel panel-default panel-intro">
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="one">
+                <div class="widget-body no-padding">
+                    <div class="bootstrap-table">
+                        <div class="fixed-table-toolbar">
+                            <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="get" action="">
+                                <div class="row"  style="margin:0;">
+                                	<!--新增门店名称搜索-->
+                                	<div style="float: left;width: 170px;margin-right: 5px;">
+                                        <input type="text" style="width:170px;height:31px;padding-left:10px;border:1px solid #ddd;outline: none;" name="shop_name" value="{$Request.get.shop_name ?? ''}" placeholder="门店名称"/>
+                                    </div>
+                                	
+                                    <div style="float: left;width: 180px;margin-right: 5px;">
+                                        <select class="form-control" name="region_id_3" onchange='javascript:get_type("region_id_4", this.value, 0)'>
+                                            <option value="">区</option>
+                                            {volist name='region_list_3' id='vo'}
+                                            <option value="{$key}" {if $Request.get.region_id_3 eq $key}selected{/if}>{$vo}</option>
+                                            {/volist}
+                                        </select>
+                                    </div>
+                                    <div style="float: left;width: 180px;margin-right: 5px;">
+                                        <select class="form-control" name="region_id_4" id="region_id_4">
+                                            <option value="">商圈</option>
+                                        </select>
+                                    </div>
+                                    <div style="float: left;width: 100px;background-color: #34c191;margin-bottom: 20px;border-radius: 4px;">
+                                        <button type="submit" class="btn btn-success btn-ok btn-embossed" style="width: 100%;background-color: #34c191">搜 索</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="fixed-table-container" style="padding-bottom: 0px;">
+                            <div class="fixed-table-header" style="display: none;">
+                                <table></table>
+                            </div>
+                            <div class="fixed-table-body">
+
+                                <table id="table" class="table table-striped table-bordered table-hover" data-operate-edit="1" data-operate-del="1" width="100%">
+                                    <thead>
+                                    <tr style="background-color: #e8f7f2;">
+                                        <th style="text-align: center; vertical-align: middle; " data-field="id">
+                                            <div class="th-inner ">Id</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="name">
+                                            <div class="th-inner ">区</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="nickname">
+                                            <div class="th-inner ">商圈</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <div class="th-inner ">门店名称</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+
+                                        <th style="text-align: center; vertical-align: middle; " data-field="operate">
+                                            <div class="th-inner ">操作</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody data-listidx="0">
+                                    {volist name='shop_list' id='vo'}
+                                    <tr style="height: 46px;">
+                                        <td style="text-align: center; vertical-align: middle; ">{$vo.id}</td>
+                                        <td style="text-align: center; vertical-align: middle; ">{$vo.region_3.0.name ?? ''}</td>
+                                        <td style="text-align: center; vertical-align: middle; ">{$vo.region_4.0.name ?? ''}</td>
+                                        <td style="text-align: center; vertical-align: middle; ">{$vo.name ?? ''}</td>
+                                        <td style="text-align: center; vertical-align: middle; ">
+                                            <a href="javascript:;" onclick="check_shop({$vo.id},'{$vo.name ?? ''}');" class="btn btn-success btn-add" title="选择" data-table-id="table" data-field-index="9" data-row-index="30" data-button-index="2"><i class="fa fa-plus"></i></a>
+                                        </td>
+                                    </tr>
+                                    {/volist}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="fixed-table-footer" style="display: none;">
+                                <table>
+                                    <tbody>
+                                    <tr></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="fixed-table-pagination">{$shop_list->render()|raw}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function check_shop(id,store_name) {
+        var url = "/good/brand_list";
+        var msg = {shop_id: id};
+        if (id == '') {
+            layer.msg('请选择门店');
+            return false;
+        }else{
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data:msg,
+                success: function (data) {
+                    if(data.code==1) {
+                        var check_store = parent.$("#c-shop_id");
+                        check_store.prev().addClass("hidden");
+                        check_store.before('<div style="position: relative;padding: 9px 15px;display: inline-block;background: #fff;border: 1px solid #dddddd; border-radius: 4px; height: 36px;light-height: 23px;">' +
+                                '<img onclick="del_store_val(this)" src="'+public_file+'/assets/img/close_red.png" style="width: 13px;height: 13px;position: absolute;top: -5px;right: -5px;cursor:pointer"/>'
+                                + store_name +'' +
+                                '</div>');
+                        check_store.val(id);
+                        parent.$("#c-shop_id-error").hide();
+                        var option_brand = parent.$("#c-brand_id");
+                        var html_flag = '';
+                        var data_brand = data.data.brand_list;
+                        $.each(data_brand, function(i, val) {
+                            html_flag = html_flag + '<option value="' + val + '">' + val + '</option>'
+                        });
+                        option_brand.append(html_flag);
+
+                        var option_type = parent.$("#c-type_id");
+                        var html_flag = data.data.good_type;
+
+                        option_type.append(html_flag);
+                        parent.layer.closeAll();
+                    } else {
+                        layer.msg(data.msg);
+                    }
+                }
+            });
+        }
+        // 待写选择门店后赋值
+    }
+
+    $(function () {
+        {notempty name='Request.get.region_id_3'}
+        get_type("region_id_4", '{$Request.get.region_id_3}', 0, '{$Request.get.region_id_4}');
+        {/notempty}
+    })
+</script>

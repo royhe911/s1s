@@ -1,0 +1,679 @@
+<script type="text/javascript" src="__CDN__/assets/libs/laydate5/laydate.js"></script>
+<script src="__CDN__/assets/js/vue.min.js"></script>
+<style>
+     /*@media screen and (max-width:1260px) {
+        .shop-i{
+            margin-top: 10px ;
+        }
+        .shop-i {
+            float: left !important;
+        }
+    }
+    @media screen and (max-width:1040px) {
+        .shop-t{
+            margin-top: 10px ;
+        }
+    }
+    @media screen and (max-width:1160px) {
+        .shop-s {
+            margin-top: 10px ;
+        }
+    }*/
+    th>div {
+        line-height: 36px;
+    }
+</style>
+<div class="panel panel-default panel-intro">
+    <div class="panel-heading row" style="padding-top:0;color: #999;font-size: 12px; line-height: 50px; background-color: transparent">
+        <!-- <div class="panel-lead"><em>门店分类管理</em></div> -->
+        <div style="background-color: #e8edf0;width: 100%; height: 50px;padding-left: 15px">
+            <div class="lf">
+                <i class="fa fa-home" style="font-size: 14px;"></i>
+            </div>
+            <div class="panel-lead lf" style="margin: 0px;">门店管理&nbsp;&nbsp;&nbsp;> </div>
+            <div class="panel-lead lf pl" style="margin: 0px;color: #34c191;">&nbsp;&nbsp;&nbsp;门店列表</div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="one">
+                <div class="widget-body no-padding">
+                    <div class="bootstrap-table">
+                        <div class="fixed-table-toolbar">
+                            <div class="bs-bars">
+                                <div id="toolbar" class="toolbar" style="position: relative;">
+                                    <form id="search_form" class="form-inline" role="form" data-toggle="validator" method="get" action="">
+                                        <div class="row"  style="margin:0;">
+                                            <div style="float: left;width: 120px;margin-right: 10px;margin-bottom:10px;">
+                                                <input class="form-control title-input" style="width: 120px;" name="shop_id" type="text" value="{$Think.get.shop_id}"  placeholder="门店id">
+                                            </div>
+                                            <div style="float: left;width: 120px;margin-right: 10px;margin-bottom:10px;">
+                                                <input class="form-control title-input" style="width: 120px;" name="name" type="text" value="{$Think.get.name}" placeholder="门店名称">
+                                            </div>
+                                            <div style="float: left;width: 120px;margin-right: 10px;margin-bottom:10px;">
+                                                <select class="form-control title-input" name="region_id_3" onchange='javascript:get_type("region_id_4", this.value, 0)' style="width: 120px;">
+                                                    <option value="">区</option>
+                                                    {volist name='region_list_3' id='vo'}
+                                                    <option value="{$key}" {if $Request.get.region_id_3 eq $key}selected{/if}>{$vo}</option>
+                                                    {/volist}
+                                                </select>
+                                            </div>
+                                            <div style="float: left;width: 120px;margin-right: 10px;margin-bottom:10px;">
+                                                <select class="form-control title-input" name="region_id_4" id="region_id_4" v-model="circle"  style="width: 120px;">
+                                                    <option value="">商圈</option>
+                                                </select>
+                                            </div>
+                                            <div style="float: left;width: 120px;margin-right: 10px;margin-bottom:10px;">
+                                                <select class="form-control title-input" name="status" v-model="status"  style="width: 120px;">
+                                                    <option value="-1" {if $status eq -1}selected{/if}>状态</option>
+                                                    <option value="0" {if $status eq 0}selected{/if}>禁用</option>
+                                                    <option value="1" {if $status eq 0}selected{/if}>启用</option>
+                                                </select>
+                                            </div>
+                                            <div style="float: left;width: 120px;margin-right: 10px;margin-bottom:10px;">
+                                                <select class="form-control title-input" name="type_id" v-model="type_id"  style="width: 120px;">
+                                                    <option value="">分类</option>
+                                                    {volist name='type_list' id='vo'}
+                                                    <option value="{$key}" {if $key eq $Think.get.type_id}selected{/if}>{$vo}</option>
+                                                    {/volist}
+                                                </select>
+                                            </div>                                                                                                                                    
+                                            <div style="float: left;width: 120px;margin-right: 10px;margin-bottom:10px;">
+                                                <select class="form-control title-input" name="is_promotion"  style="width: 120px;">
+                                                    <option value="-1">校验状态</option>
+                                                    <option value="0" {if $is_promotion eq 0} selected="selected" {/if}>未校验</option>
+                                                    <option value="1" {if $is_promotion eq 1} selected="selected" {/if}>已校验</option>
+                                                </select>
+                                            </div>
+                                            
+                                            
+                                            <!--新增搜索条件-->
+                                            <div style="float: left;width: 120px;margin-right: 10px;margin-bottom:10px;">
+                                                <select class="form-control title-input" name="data_source" style="width: 120px;">
+                                                    <option value="0">来源</option>
+                                                    <option value="1" {if $Request.get.data_source eq 1}selected{/if}>抓取</option>
+                                                    <option value="2" {if $Request.get.data_source eq 2}selected{/if}>导入</option>
+                                                    <option value="3" {if $Request.get.data_source eq 3}selected{/if}>后台添加</option>
+                                                </select>
+                                            </div>
+                                            <div style="float: left;width: 120px;margin-right: 10px;margin-bottom:10px;">
+                                                <select class="form-control title-input" name="is_user_status"  style="width: 120px;">
+                                                    <option value="-1">认领状态</option>
+                                                    <option value="0" {if $is_user_status eq 0}selected{/if}>未认领</option>
+                                                    <option value="1" {if $is_user_status eq 1}selected{/if}>已认领</option>
+                                                    <option value="2" {if $is_user_status eq 2}selected{/if}>认领中</option>
+                                                </select>
+                                            </div>
+                                            <div style="float: left;width: 120px;margin-right: 10px;margin-bottom:10px;">
+                                                <select class="form-control title-input" name="is_vip"  style="width: 120px;">
+                                                	<option value="0">所有门店</option>
+                                                	<option value="1" {if $Request.get.is_vip eq 1}selected{/if}>普通门店</option>
+                                                	<option value="2" {if $Request.get.is_vip eq 2}selected{/if}>VIP门店</option>
+                                                </select>   
+                                            </div>
+                                            
+                                            
+                                            <div style="float: left;width: 330px;margin-right: 10px;width: 180px;" class="shop-t">
+                                                <input class="input-text laydate-icon os-pl-10" style="width: 180px; height: 36px;padding-left: 8px;font-size: 12px;border:1px solid #d2d6de"
+                                                    type="text" id="fromTime" name="from_time" placeholder="搜索时间区间" onfocus="this.blur()" />
+                                            </div>
+                                            <div style="float: left;width: 100px;margin-right: 25px; height: 36px;" class="shop-s">
+                                                <button type="submit" class="btn btn-success btn-ok btn-embossed br" style="width: 100%;height: 36px; border-radius: 4px;background-color: #34c191;">{:__('搜索')}</button>
+                                            </div>
+                                            
+                                        </div>
+                                    </form>
+
+                                    <div class="form-inline" style="margin-top: 12px;">
+                                        <a type="button" href="<?php echo url('shops/add_shop');?>" class="btn btn-success btn-ok btn-embossed bs-bars-com">{:__('添加门店')}</a>
+                                        <span style="margin-left: 20px;"></span>
+                                        <a id="onAllCC" type="button" href="javascript:void(0)" class="btn btn-success btn-ok btn-embossed  btn-disabled disabled bs-bars-com">批量启用</a>
+                                        <a id="offAllCC" type="button" href="javascript:void(0)" class="btn btn-success btn-ok btn-embossed  btn-disabled disabled bs-bars-com" style="background-color: #37c6c0">批量停用</a>
+                                        <a id="deleteAllCC" type="button" href="javascript:void(0)" class="btn btn-success btn-ok btn-embossed  btn-disabled disabled bs-bars-com" style="background-color: #79baf3">批量删除</a>
+                                       
+                                        <a href="javascript:;" onclick="layer_open('门店导入', '/shops/upload_shop_file',{w:'400px',h:'195px'})" class="btn btn-success btn-add bs-bars-com"
+                                            style="width: 100%; background-color: #34c191; border-radius: 4px; height: 38px;" title="门店导入">门店导入</a>
+                                           
+                                        <p style="float: right;font-size: 12px;padding: 8px;">共计 <span style="color: #34c191;">{$list->total()}</span> 个门店</p>
+	                                    <div class="num" style="float: right;">
+			                            	<select class="form-control title-input num_list" style="width: 120px;border-color:#18BC9C" name="" id="">
+			                                	<option value="0">查看条数</option>
+			                                	{volist name='page_list' id='vo'}
+			                                	<option value="{$vo}" {if $Think.session.cur_limit eq $vo}selected{/if}>{$vo}</option>
+			                                	{/volist}
+			                                </select>
+			                            </div>      
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="show_data" class="fixed-table-container" style="padding-bottom: 0px;">
+                            <div class="fixed-table-header" style="display: none;">
+                                <table></table>
+                            </div>
+                            <div class="fixed-table-body">
+                                <table id="table" class="table table-striped table-bordered table-hover" data-operate-edit="1" data-operate-del="1" width="100%">
+                                    <thead>
+                                    <tr style="background-color:#e8f7f2">
+                                        <th class="bs-checkbox " style="text-align: center; vertical-align: middle; width: 36px; " data-field="0">
+                                            <div class="th-inner ">
+                                                <input name="btSelectAll" id="btSelectAll" type="checkbox" disabled="disabled">
+                                            </div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="id">
+                                            <div class="th-inner ">Id</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="name">
+                                            <div class="th-inner ">门店名称</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="nickname">
+                                            <div class="th-inner ">门店分类</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <div class="th-inner ">区</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <div class="th-inner ">商圈</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <div class="th-inner ">门店地址</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <div class="th-inner ">商品数量</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <div class="th-inner ">评论数量</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        
+                                        
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <div class="th-inner ">所有者</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <div class="th-inner ">来源</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <div class="th-inner ">认领状态</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <div class="th-inner ">校验状态</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <div class="th-inner ">推荐</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <div class="th-inner ">状态</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="operate">
+                                            <div class="th-inner ">操作</div>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {volist name='list' id='vo'}
+                                    <tr class="ac-tr" data-name="{$vo.name}" data-id="{$vo.id}">
+                                        <th class="bs-checkbox " style="text-align: center; vertical-align: middle; width: 36px; " data-field="0">
+                                            <div class="th-inner ">
+                                                <input class="checkCC" name="btSelectItem" data-id="{$vo.id}" type="checkbox">
+                                            </div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="id">
+                                            {$vo.id}
+                                        </th>
+                                        <th class="ac-store-name-tr" style="text-align: center; vertical-align: middle; " data-field="name">
+                                            <div class="ac-store-name setEllipsis" style="width: 15em; font-size: 12px; display: inline-block; " title='{$vo.name}' data-title="{$vo.name}">{$vo.name}</div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="nickname">
+                                            <div class="ac-store-type setEllipsis" style="width: 10em; font-size:12px; display: inline-block;" data-title="" title="">
+                                                {if $vo.shop_type_shop}
+                                                {volist name='vo.shop_type_shop' id='vo2'}
+                                                {$type_list[$vo2.type_id] ?? ''}
+                                                {/volist}
+                                                {/if}
+                                            </div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            {$vo.region_3.name ?? ''}
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                        	<div class="ac-store-type setEllipsis" style="width: 12em; font-size:12px; display: inline-block;" data-title="" title="{$vo.region_4.name ?? ''}">
+                                            	{$vo.region_4.name ?? ''}
+                                            </div>
+                                        </th>
+                                        
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <div class=" setEllipsis" style="width: 20em; display: inline-block" title=''>
+                                                {$vo.address ?? ''} {$vo.doorplate ?? ''}
+                                            </div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <a title="查看商品详细" class="goodsCC" data-id="{$vo.id}" data-name="{$vo.name}" href="javascript:void (0);" style="color:#34c191">{$vo.good_count}</a>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <a title="查看评论详细" class="commentsCC" data-id="{$vo.id}" data-num="{$vo.comment_count+$vo.comment_hidden_count}" data-name="{$vo.name}" href="javascript:void (0);" style="color:#34c191">{$vo.comment_count+$vo.comment_hidden_count}</a>
+                                        </th>
+
+                                        <!--新增字段-->
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            {$vo.nickname ?? ''}
+                                        </th>                                        
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            {if $vo.data_source eq 1}
+                                            抓取
+                                            {elseif $vo.data_source eq 2}
+                                            导入
+                                            {elseif $vo.data_source eq 3}
+                                            后台添加
+                                            {else}{/if}
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            {if $vo.is_user_status eq 1}
+                                            已认领
+                                            {elseif $vo.is_user_status eq 2}
+                                            认领中
+                                            {else}
+                                            未认领
+                                            {/if}
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            <div class="overflow-hidden" >
+                                                {$vo.is_promotion == 1 ? '已校验' : '未校验'}
+                                            </div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status">
+                                            {if $vo.is_index gt 0}
+                                            <a class="indexCC btn-change text-success ac-is-stop" href="javascript:;" data-status="1" data-id="{$vo.id}" title="关闭推荐">
+                                                <i class="fa fa-toggle-on fa-2x" style="color: #18bc9c;"></i>
+                                            </a>
+                                            {else}
+                                            <a class="indexCC btn-change text-success ac-is-stop" href="javascript:;" data-status="0" data-id="{$vo.id}" title="推荐">
+                                                <i class="fa fa-toggle-off fa-2x" style="color: #18bc9c;"></i>
+                                            </a>
+                                            {/if}
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="status" >
+                                            {if $vo.status eq 1}
+                                            <a class="statusCC btn-change text-success ac-is-stop"  href="javascript:;" data-status="1" data-id="{$vo.id}" title="停用">
+                                                <i class="fa fa-toggle-on fa-2x" style="color: #18bc9c;"></i>
+                                            </a>
+                                            {else}
+                                            <a class="statusCC btn-change text-success ac-is-stop" href="javascript:;" data-status="0" data-id="{$vo.id}" title="启用">
+                                                <i class="fa fa-toggle-off fa-2x" style="color: #18bc9c;"></i>
+                                            </a>
+                                            {/if}
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle;width: 100px; " data-field="operate">
+                                            <a href="javascript:;" class="{$vo.status == 1 ? 'editClick' : 'btn-s'} btn-editone btn-color editCC" title="编辑"
+                                                data-table-id="table" data-field-index="9" data-row-index="0" data-button-index="0" data-id="{$vo.id}">
+                                                <i class="iconfont icon-edit"></i>
+                                            </a>
+                                            <a class="albumCC" style="color: #9f9f9f; margin-left:5px; display: inline-block" href="javascript:void(0)" data-id="{$vo.id}" title="相册">
+                                                <i class="iconfont icon-tupian"></i>
+                                            </a>
+                                            <a class="deleteCC" style="color: #9f9f9f; display: inline-block" href="javascript:void(0)" data-id="{$vo.id}" title="删除">
+                                                <i class="iconfont icon-shanchu"></i>
+                                            </a>
+                                        </th>
+                                    </tr>
+                                    {/volist}
+                                    </tbody>
+                                </table>
+                                <script>
+//                                    $('#btSelectAll').click(function () {
+//                                        var checked = $(this).prop('checked');
+//                                        $('.checkCC').prop('checked', checked);
+//                                    });
+
+                                    $(".ac-is-stop").on("click", function () {
+                                        // console.log('++++++++++++++++++++++++++++++++++++');
+                                        // console.log($(this).attr('data-status'))
+                                        // console.log('++++++++++++++++++++++++++++++++++++');
+                                        if ($(this).attr('data-status') == 1) {
+                                            $(this).parent().next().children('.btn-editone').removeClass('btn-s').addClass('editClick')
+                                        } else {
+                                            $(this).parent().next().children('.btn-editone').removeClass('editClick').addClass('btn-s')
+                                            // $('this').css('backgroundColor', '#34c191')
+                                        }
+                                    });
+
+                                    $(document).on('click', '.btn-s', function () {
+                                        var shop_name = $(this).parents('tr').attr('data-name');
+                                        var url = '<?php echo url("shops/edit_shop");?>' + '?id=' + $(this).attr('data-id');
+                                        window.location.href = url;
+                                    })
+                                    //全部启用
+                                    $('#onAllCC').click(function () {
+                                        var url = '<?php echo url("shops/shop_status");?>';
+                                        var htmlInstance = $('.checkCC[type=checkbox]:checked');
+                                        var formData = {status: 1};
+                                        var idArr = [];
+
+                                        htmlInstance.each(function (i) {
+                                            idArr.push($(this).attr('data-id'));
+                                        });
+
+                                        if (idArr.length <= 0) {
+                                            return true;
+                                        }
+
+                                        formData.id = idArr.join(',');
+
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: url,
+                                            data: formData,
+                                            success: function (result) {
+                                                //提示层
+                                                console.log(result);
+                                                if (result.code == 1) {
+                                                    layer.msg(result.msg + ' 1秒后刷新');
+                                                    setTimeout(function () {
+                                                        location.reload();
+                                                    }, 1000)
+                                                }else {
+                                                    layer.msg(result.msg);
+                                                }
+                                            },
+                                            error: function(msg){
+                                                //提示层
+                                                console.log(result);
+                                                layer.msg('服务器忙，请稍后··');
+
+                                            },
+                                            dataType: 'JSON'
+                                        });
+                                    });
+
+                                    //全部停用
+                                    $('#offAllCC').click(function () {
+                                        var url = '<?php echo url("shops/shop_status");?>';
+                                        var htmlInstance = $('.checkCC[type=checkbox]:checked');
+                                        var formData = {status: 0};
+                                        var idArr = [];
+
+                                        htmlInstance.each(function (i) {
+                                            idArr.push($(this).attr('data-id'));
+                                        });
+
+                                        if (idArr.length <= 0) {
+                                            return true;
+                                        }
+
+                                        formData.id = idArr.join(',');
+
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: url,
+                                            data: formData,
+                                            success: function (result) {
+                                                //提示层
+                                                console.log(result);
+                                                if (result.code == 1) {
+                                                    layer.msg(result.msg + ' 1秒后刷新');
+                                                    setTimeout(function () {
+                                                        location.reload();
+                                                    }, 1000)
+                                                }else {
+                                                    layer.msg(result.msg);
+                                                }
+                                            },
+                                            error: function(msg){
+                                                //提示层
+                                                console.log(result);
+                                                layer.msg('服务器忙，请稍后··');
+
+                                            },
+                                            dataType: 'JSON'
+                                        });
+                                    });
+
+                                    //全部删除
+                                    $('#deleteAllCC').click(function () {
+                                        //询问框
+
+                                        layer.confirm('您确定要删除选中数据？', {
+                                            btn: ['确定','取消'] //按钮
+                                        }, function(){
+                                            var url = '<?php echo url("shops/delete_shop");?>';
+                                            var htmlInstance = $('.checkCC[type=checkbox]:checked');
+                                            var formData = {};
+                                            var idArr = [];
+
+                                            htmlInstance.each(function (i) {
+                                                idArr.push($(this).attr('data-id'));
+                                            });
+
+                                            if (idArr.length <= 0) {
+                                                return true;
+                                            }
+
+                                            formData.id = idArr.join(',');
+
+                                            $.ajax({
+                                                type: 'POST',
+                                                url: url,
+                                                data: formData,
+                                                success: function (result) {
+                                                    //提示层
+                                                    console.log(result);
+                                                    if (result.code == 1) {
+                                                        layer.msg(result.msg + ' 1秒后刷新');
+                                                        setTimeout(function () {
+                                                            location.reload();
+                                                        }, 1000)
+                                                    }else {
+                                                        layer.msg(result.msg);
+                                                    }
+                                                },
+                                                error: function(msg){
+                                                    //提示层
+                                                    console.log(result);
+                                                    layer.msg('服务器忙，请稍后··');
+
+                                                },
+                                                dataType: 'JSON'
+                                            });
+                                        });
+                                    });
+
+
+                                    //单一推荐
+                                    $('.indexCC').click(function () {
+                                        var formData = {},url,htmlInstance = $(this);
+                                        formData.id = $(this).attr('data-id');
+                                        formData.status = $(this).attr('data-status');
+
+                                        url = '<?php echo url("shops/shop_index");?>';
+                                        formData.status = (formData.status == 1) ? 0: 1;
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: url,
+                                            data: formData,
+                                            success: function (result) {
+                                                //提示层
+                                                layer.msg(result.msg);
+                                                if (result.code == 1) {
+                                                    htmlInstance.attr('data-status', formData.status);
+                                                    if (formData.status == 1){
+                                                        htmlInstance.attr('title', "关闭推荐");
+                                                        htmlInstance.children('i').removeClass('fa-toggle-off').addClass('fa-toggle-on');
+                                                    }else {
+                                                        htmlInstance.attr('title', "推荐");
+                                                        htmlInstance.children('i').removeClass('fa-toggle-on').addClass('fa-toggle-off');
+                                                    }
+
+                                                }
+                                            },
+                                            error: function(msg){
+                                                //提示层
+                                                layer.msg('服务器忙，请稍后··');
+                                            },
+                                            dataType: 'JSON'
+                                        });
+                                    });
+
+                                    // 编辑状态
+                                    $('.statusCC').click(function () {
+                                        var formData = {},url,htmlInstance = $(this);
+                                        formData.id = $(this).attr('data-id');
+                                        formData.status = $(this).attr('data-status');
+                                        url = '<?php echo url("shops/shop_status");?>';
+                                        formData.status = (formData.status == 1) ? 0: 1;
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: url,
+                                            data: formData,
+                                            dataType: 'JSON',
+                                            success: function (result) {
+                                                //提示层
+                                                layer.msg(result.msg);
+                                                if (result.code == 1) {
+                                                    htmlInstance.attr('data-status', formData.status);
+                                                    if (formData.status == 1){
+                                                        htmlInstance.attr('title', "停用");
+                                                        htmlInstance.children('i').removeClass('fa-toggle-off').addClass('fa-toggle-on');
+                                                        htmlInstance.parent().next().children('.btn-editone').removeClass('btn-s').addClass('editClick')
+                                                    }else {
+                                                        htmlInstance.attr('title', "启用");
+                                                        htmlInstance.children('i').removeClass('fa-toggle-on').addClass('fa-toggle-off');
+                                                        htmlInstance.parent().next().children('.btn-editone').removeClass('editClick').addClass('btn-s')
+                                                    }
+                                                }
+                                            },
+                                            error: function(msg){
+                                                //提示层
+                                                layer.msg('服务器忙，请稍后··');
+                                            }
+                                        });
+
+                                    });
+
+                                    // 删除相关数据
+                                    $('.deleteCC').on("click",function () {
+                                        var formData = {},htmlInstance = $(this);
+                                        formData.id = $(this).attr('data-id');
+                                        var url = '<?php echo url("shops/delete_shop");?>';
+                                        //询问框
+                                        layer.confirm('您确定要删除该数据？', {
+                                            btn: ['确定','取消'] //按钮
+                                        }, function(){
+                                            $.ajax({
+                                                type: 'POST',
+                                                url: url,
+                                                data: formData,
+                                                success: function (result) {
+                                                    //提示层
+                                                    layer.msg(result.msg);
+                                                    if (result.code == 1){
+                                                        htmlInstance.parents(".ac-tr").empty()
+                                                    }
+                                                },
+                                                error: function(msg){
+                                                    //提示层
+                                                    layer.msg('服务器忙，请稍后··');
+                                                },
+                                                dataType: 'JSON'
+                                            });
+                                        });
+                                    });
+
+                                    //商品列表
+                                    $('.goodsCC').on("click",function () {
+                                        var shop_name = $(this).parents('tr').attr('data-name');
+                                        var shop_num=$(this).html();
+                                        var url = '<?php echo url("good/index");?>' + '?shop_name=' + shop_name;
+                                        if(shop_num && shop_num!=0){
+                                        	layer_open(shop_name + '-商品列表', url);
+                                        }                                      
+                                    });
+
+                                    //评论列表
+                                    $('.commentsCC').on("click",function () {
+                                        var comment_num=$(this).attr('data-num');
+                                        console.log(comment_num);
+                                        if(comment_num&&comment_num!=0) {
+                                            var shop_name = $(this).parents('tr').attr('data-name');
+                                            var url = '<?php echo url("shops/comments");?>' + '?shop_name=' + $(this).parent().parent().attr('data-name');
+                                            layer_open(shop_name + '-评论列表', url);
+                                        }
+                                    });
+
+                                    //相册
+                                    $('.albumCC').on("click",function () {
+                                        var shop_name = $(this).parents('tr').attr('data-name');
+                                        var shop_id = $(this).parents('tr').attr('data-id');
+                                        var url = '<?php echo url("shops/album");?>' + '?shop_id=' + shop_id;
+                                        layer_open(shop_name + '-相册', url,{w:'620px',h:'390px'});
+                                    });
+                                </script>
+                            </div>
+                            <div class="fixed-table-footer" style="display: none;">
+                                <table>
+                                    <tbody>
+                                    <tr></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="fixed-table-pagination">{$list->render()|raw}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {   	
+    	$('#btSelectAll').attr('disabled',false)
+        //切换显示条数
+		$('.num_list').change(function(){
+	    	var value=$(this).find('option:selected').val();
+	    	var shop_id=$('input[name="shop_id"]').val();   
+	    	var name=$('input[name="name"]').val();
+	    	var region=$('select[name="region"]').find('option:selected').val();
+	    	var circle=$('select[name="circle"]').find('option:selected').val();
+	    	var status=$('select[name="status"]').find('option:selected').val();
+	    	
+	    	var type_id=$('select[name="type_id"]').find('option:selected').val();
+	    	var is_promotion=$('select[name="is_promotion"]').find('option:selected').val();
+	    	var data_source=$('select[name="data_source"]').find('option:selected').val();
+	    	var is_user_status=$('select[name="is_user_status"]').find('option:selected').val();
+	    	var is_vip=$('select[name="is_vip"]').find('option:selected').val();
+	    	var from_time=$('input[name="from_time"]').val();
+	    	location.href = '/shops/index?cur_limit=' + value+'&shop_id='+shop_id+'&name='+name+'&region='+region+'&circle='+circle+'&status='+status+'&type_id='+type_id
+	    	+'&is_promotion='+is_promotion+'&data_source='+data_source+'&is_user_status='+is_user_status+'&is_vip='+is_vip+'&from_time='+from_time;
+	    })
+
+        /**
+         * 加载时间插件
+         */
+        laydate.render({
+            elem: '#fromTime'
+            ,range: true
+            ,value: "{$Request.get.from_time ?? ''}"
+        });
+    })();
+    $(function () {
+        {notempty name='Request.get.region_id_3'}
+        get_type("region_id_4", '{$Request.get.region_id_3}', 0, '{$Request.get.region_id_4}');
+        {/notempty}
+        })
+</script>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" style="font-size: 100px">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0">
+    <title>千寻狗</title>
+    <link rel="stylesheet" type="text/css" href="/static/index/css/h5_merchant_view.css">
+	<script type="text/javascript" src="/static/index/js/jquery/jquery.js"></script>
+	<script type="text/javascript" src="/static/index/js/jquery-validation-1.14.0/jquery.validate.js"></script>
+<!-- 	<script type="text/javascript" src="/static/index/js/jquery-validation-1.14.0/messages_zh.js"></script> -->
+	<script type="text/javascript" src="/static/index/js/h5_merchant_view.js"></script>
+</head>
+<body>
+	<!-- 确认密码激活 -->
+	<div class="h5_merchant_container">
+		<div class="h5_merchant_title">
+			<span><b>欢迎激活千寻狗后台服务</b></span>
+			<p>多终端一站式服务</p>
+		</div>
+		<div class="h5_merchant_logoBox">
+			<div class="logo_item_box">
+				<div class="logo_img_box">
+					<img src="/static/index/icon/1.png">
+				</div>
+				<span class="logo_text logo_text_shop">门店管理</span>
+			</div>
+			<div class="logo_item_box">
+				<div class="logo_img_box">
+					<img src="/static/index/icon/2.png">
+				</div>
+				<span class="logo_text logo_text_good">商品管理</span>
+			</div>
+			<div class="logo_item_box">
+				<div class="logo_img_box">
+					<img src="/static/index/icon/3.png">
+				</div>
+				<span class="logo_text logo_text_area">商圈管理</span>
+			</div>
+		</div>
+		<div class="h5_merchant_userInfo">
+			<form id="form">
+				    <div class="form_item">
+				        <label class="label_item">登录账号：</label>
+				        <div class="input_box login_id_box">
+				        	<span id="login_id"><b>{$username}</b></span>
+				    	</div>
+				    </div>
+				    <div class="form_item">
+				        <label for="h5_merchant_pwd" class="label_item">登录密码：</label>
+			            <div class="input_box">
+			                <input id="h5_merchant_pwd" name="h5_merchant_pwd" placeholder="请输入您的密码" type="password" value="{$row.title ?? ''}">
+			            </div>
+				    </div>
+				    <div class="form_item">
+				        <label  for="h5_merchant_rePwd" class="label_item">再次输入：</label>
+			            <div class="input_box">
+			                <input id="h5_merchant_rePwd" name="h5_merchant_rePwd" placeholder="请再次输入您的密码" type="password" value="{$row.title ?? ''}">
+			                <input id="sign" type="hidden" value="{$sign ?? 0}" >
+			            </div>
+				    </div>
+					<div class="sumit_box">
+				    	<input class="submit form_item_submit" type="submit" value="立即激活">
+					</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- 激活成功页面 -->
+	<div class="h5_activate_box merchant_noShow">
+		<div class="content">
+			<div class="logo"></div>
+			<div class="title">您的账号已成功激活</div>
+			<div class="text">
+					请用电脑打开"千寻狗后台服务"<br>
+					进入登录界面进行登录
+			</div>
+		</div>
+	</div>
+</body>
+</html>

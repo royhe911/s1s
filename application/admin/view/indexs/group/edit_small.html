@@ -1,0 +1,153 @@
+<link rel="stylesheet" type="text/css" href="__CDN__/assets/libs/laydate/need/laydate.css?v={$site.version}"/>
+<script src="__CDN__/assets/js/vue.min.js"></script>
+<div class="panel panel-default panel-intro">
+    <!-- <div class="panel-heading row" style="padding-top:0;padding-left: 30px;color: #999;font-size: 12px;">
+        <div class="lf"><i class="fa fa-home" style="font-size: 14px;"></i></div>
+        <a href="<?php echo url('shops/index');?>" class="panel-lead lf" style="margin: 0px; color: #656565 !important;">门店管理&nbsp;&nbsp;&nbsp;> </a>
+        <div class="panel-lead lf" style="margin-left: 7px;color: #34c191;">&nbsp;&nbsp;&nbsp;门店分类</div>
+    </div> -->
+    <div class="panel-body" style="height: 100vh;">
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="one">
+                <div class="widget-body no-padding">
+                    <div class="bootstrap-table">
+                        <div class="fixed-table-toolbar">
+                            <div class="bs-bars pull-left" style="width: 100%;">
+                                <div id="toolbar" class="toolbar os-row" style="position: relative;">
+                                    <div class="pull-left" style="width: 60px;padding-top: 22px;box-sizing: border-box;height: 30px; margin-bottom:25px;">已选分类:</div>
+                                    <div id="ac_dataList" class="form-inline ac-box lf" style="margin-top: 12px; width: 80%;">
+                                    </div>
+                                    <!-- <div class="lf"  style="margin-top: 12px;">
+                                        <button type="button" class="ac-ok btn btn-success btn-ok btn-embossed" style="padding: 8px 20px; background-color: #34c191">添 加</button>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div id="show_data" class="fixed-table-container" style="padding-bottom: 0px;">
+                            <div class="fixed-table-body">
+                                <table id="table" class="table table-striped table-bordered table-hover" data-operate-edit="1" data-operate-del="1" width="100%">
+                                    <thead>
+                                    <tr style=" background-color:#e8f7f2; ">
+                                        <th style="text-align: center; vertical-align: middle; " data-field="id">
+                                            <div class="th-inner ">Id</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="name">
+                                            <div class="th-inner ">分类名称</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="operate">
+                                            <div class="th-inner ">操作</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {volist name='type_list' id='vo'}
+                                    <tr style="height: 46px">
+                                        <th style="text-align: center; vertical-align: middle; " data-field="id">{$vo.id}</th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="id">{$vo.name}</th>
+                                        <th style="text-align: center; vertical-align: middle; " data-field="operate">
+                                            <a href="javascript:;" class="ac-add os-checkbox" title="选择" data-name="{$vo.name}" data-id="{$vo.id}"></a>
+                                        </th>
+                                    </tr>
+                                    {/volist}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="fixed-table-footer" style="display: none;">
+                                <table>
+                                    <tbody>
+                                    <tr></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="fixed-table-pagination">{$type_list->render()|raw}</div>
+                            <div class="lf" style="width: 100%;text-align: center;margin-top: 17px">
+                                <button type="button" class="ac-ok btn btn-success btn-ok btn-embossed" style="width: 100px;height: 36px;text-align: center; background-color: #34c191">
+                                保 存 </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        function remove_check_name(element_del,elements,array) {
+            element_del.on("click",".ac-delete",function() {
+                var attr_index = $(this).attr("data-index");
+                array.splice(attr_index, 1);
+                var attr_id=$(this).attr("data-id");
+                $.each(elements, function (index, val) {
+                    if ($(val).attr("data-id") == attr_id) {
+                        $(val).removeClass("os-checkbox-focus")
+                    }
+                });
+                store_val(default_data);
+                $(this).parent().remove();
+            });
+        }
+        function store_val(default_data) {
+            var parent_add_branch= parent.$("#editTypeCC");
+            var default_data_json = JSON.stringify(default_data);
+            parent_add_branch.attr("data-database", default_data_json);
+        }
+
+        var content = $("#myTabContent");
+        var ac_add = content.find(".ac-add");
+        var ac_del_box= content.find(".ac-box");
+        var parent_add_branch= parent.$("#editTypeCC");
+        var default_data = parent_add_branch.attr("data-database");
+        if(!default_data) {
+            default_data = [];
+        }else{
+            default_data = JSON.parse(default_data);
+            add_check_name(default_data,content,ac_add);
+            remove_check_name(ac_del_box,ac_add,default_data)
+        }
+        ac_add.on("click",function () {
+            $(this).addClass("os-checkbox-focus");
+            var brand_id = Number($(this).attr('data-id'));
+            var brand_name = $(this).attr('data-name');
+            var default_data_str = JSON.stringify(default_data);
+            if(default_data_str.indexOf(':'+brand_id+',')!=-1) {
+                layer.msg('当前已有该分类！');
+                return true;
+            }else{
+                var obj = {
+                    id:brand_id,
+                    name:brand_name
+                };
+                default_data.push(obj);
+                add_check_name(default_data,content)
+            }
+            store_val(default_data);
+        });
+        content.find(".ac-ok").on("click",function() {
+            if(ac_del_box.children().length>0) {
+                var ids = {$ids};
+                var type_ids = ',';
+                $.each(default_data, function (index, val) {
+                    type_ids +=  val.id + ','
+                });
+                $.post('',  {type_ids: type_ids, ids: ids}, function (data) {
+                    if (data.code == 1) {
+                        layer.msg(data.msg, {
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            window.parent.location.reload();
+                        });
+                    } else {
+                        layer.alert(data.msg, {icon: 5});
+                    }
+                })
+            }else{
+                layer.msg('分类数量最少为1个！');
+            }
+        });
+    })();
+</script>

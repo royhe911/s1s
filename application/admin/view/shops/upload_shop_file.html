@@ -1,0 +1,103 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="" style="background: #ffffff;height: 100vh;">
+    <div style="padding: 25px 45px 0 45px;">
+        <input id="branch_no" type="hidden" value="{$branch_no ?? ''}"/>
+        <div class="form-group" style="margin-bottom: 0;">
+            <label for="c-image" class="control-label lf" style="width: 75px;line-height:31px;">选择文件:</label>
+            <div class="lf" style="width: 265px;vertical-align: middle;height: 56px;">
+                <div class="input-group lf ac-error-box"  id="div_box">
+                    <input type="text" class="hidden"/>
+                    <div  class="form-control" id="c-image" style="overflow: hidden; white-space: nowrap;-ms-text-overflow: ellipsis;text-overflow: ellipsis;width: 200px;"></div>
+                        <input id="c-file" class="hidden ac-store-name"  type="file" accept=".zip" value="{$row.image_url ?? ''}" style="overflow: hidden;">
+                    <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button  style="margin-top: -5px;" type="button" id="plupload-image" class="btn btn-danger plupload  ac-div-box-child" data-input-id="c-image" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="false" data-preview-id="p-image">
+                            <i class="fa fa-upload"></i> 上传
+                        </button>
+                    </span>
+                    </div>
+                    <span class="msg-box n-right"></span>
+                </div>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-image"></ul>
+        </div>
+        <div class="form-group">
+            <div style="text-align: center;">
+                <button type="button" class="btn btn-success btn-ok btn-embossed ac-btn table-input">保存</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="__CDN__/assets/js/backend/associative_input.js?v={$site.version}"></script>
+<script type="text/javascript" charset="utf-8" src="__CDN__/assets/js/backend/error_msg.js?v={$site.version}"></script>
+<script>
+    (function () {
+        var file = $('#c-file');
+        $("#plupload-image").on("click", function () {
+            file.click();
+        });
+        file.on('change', function( e ){
+            var file_name = e.currentTarget.files[0].name;
+            $("#c-image").html(file_name);
+        });
+
+        //阻止事件蔓延 ,只允许后面的按钮事件有效果
+        $("#c-image").on("click", function (e) {
+            e.stopPropagation();
+        });
+        //非必填输入框和div,select的防错处理
+        fun.error_clear_box();
+        //调用防错处理结束
+
+        $(".ac-btn").on("click",function() {
+        	
+            var form = new FormData();
+            form.append("branch_no", $('#branch_no').val());
+
+            var file = document.getElementById("c-file").files[0];
+            if(!file) {
+                var city_element = $("#div_box");
+                var city_element_obj = {
+                    msg:"未选择文件",
+                    element:city_element
+                };
+                fun.error_msg_create_box(city_element_obj,{
+                    marginTop:'3px',
+                    overflow: 'inherit'
+                });
+                return;
+            }
+
+            form.append("file", file);
+            var xhr = null; //得到xhr对象
+            if (XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else {
+                xhr = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xhr.open("post", "", true);//设置提交方式，url，异步提交
+            xhr.onload = function () {
+                var data = xhr.responseText; //得到返回值
+                data = JSON.parse(data);
+                if (data.code == 1) {
+                    layer.closeAll(layer_id);
+                    layer.msg(data.msg, {
+                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function () {                    
+                        window.parent.location.reload()
+                    });
+                } else {
+                    layer.msg(data.msg);
+                }
+            };
+            var layer_id=layer.msg('上传中', {
+                icon : 16,
+                shade : 0.5,
+                time : 0
+            });
+            xhr.send(form);
+        })
+        //   $.each($(".ac-store-name"), function (index, val) {
+        //     fun.txt_ellipsis($(val), 1);
+        // });   
+    })();
+</script>

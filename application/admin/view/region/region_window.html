@@ -1,0 +1,166 @@
+<div class="citylist">
+	<div class="city_list_hot">
+<!-- 		<label>热门城市：</label>
+		<p>
+			<label>A</label>
+			<span>北京</span>
+			<span>北京</span>
+			<span>北京</span>
+		</p> -->
+	</div>
+	<div class="city_list_all">
+<!-- 		<p>
+			<label>A</label>
+			<span>北京</span>
+			<span>北京</span>
+			<span>北京</span>
+		</p> -->
+	</div>
+</div>
+
+<script type="text/javascript">
+	// 城市跳转数据
+	// dashboard/change_city  city_id
+	$.ajax({
+	    url: "<?php echo 'http://' . $_SERVER['HTTP_HOST'] . '/api/get_city_list'; ?>", 
+	    dataType: "json", //返回格式为json
+	    type: "GET", //请求方式
+	    success: function(data) {
+	        //请求成功时处理
+	        // console.log('ajax is success');
+	        var jsonObj = JSON.parse(data);
+	        if (jsonObj.code === 1) {
+	        	var cityHotObj = jsonObj.data.hot_city_list;
+	        	var cityListObj = jsonObj.data.city_list;
+	        	// console.log("cityHotObj", cityHotObj);
+	        	// console.log("cityListObj", cityListObj);
+
+	        	// 热门城市数据渲染
+	        	for (var i = 0; i < cityHotObj.length; i++) {
+	        		(function(){
+		        		var cityHot_short_name = cityHotObj[i].short_name;
+		        		var cityHot_id = cityHotObj[i].id
+						if (i == 0) {
+							var cityHot_box = $("<p></p>");
+							var cityHot_title = $("<label></label>").text("热门城市");
+							$(".city_list_hot").append(cityHot_title);
+							cityHot_title.after(cityHot_box);
+							// $(".city_list_hot label").after(cityHot_box);
+						}
+						var cityHot_item = $("<span></span>").text(cityHot_short_name).bind('click', function() {
+								// console.log(666);
+								$.get('/dashboard/change_city', { city_id: cityHot_id }, function (data) {
+									// console.log(data);
+									if (data.code == 1) {
+										//根据返回值进行跳转
+							            window.parent.window.location.href = "<?php echo 'http://' . $_SERVER['HTTP_HOST'];?>/index/index";
+							        }
+								});
+							});
+						$(".city_list_hot p").append(cityHot_item);
+	        		})()
+	        	}
+				// 城市列表数据渲染
+				$.each(cityListObj, function(i) {
+					var cityList_label = i;
+					var cityList_box = $("<p></p>");
+					var cityList_title = $("<label></label>").text(i);
+
+					//创建城市盒子
+					var cityList_city_box = $("<i></i>");
+					cityList_box.append(cityList_title);
+					//插入城市盒子
+					cityList_box.append(cityList_city_box);
+					$.each(cityListObj[i], function(j) {
+		        		var cityList_short_name = cityListObj[i][j].short_name;
+		        		var cityList_id = cityListObj[i][j].id
+		        		// console.log("test",i,cityList_short_name,cityList_id);
+						var cityList_item = $("<span></span>").text(cityList_short_name).bind('click', function() {
+							// console.log(666);
+							$.get('/dashboard/change_city', { city_id: cityList_id }, function (data) {
+								// console.log(777);
+								if (data.code == 1) {
+									//根据返回值进行跳转
+						            window.parent.window.location.href = "<?php echo 'http://' . $_SERVER['HTTP_HOST'];?>/index/index";
+						        }
+							});
+						});
+						cityList_city_box.append(cityList_item);
+					});
+					$(".city_list_all").append(cityList_box);
+				});
+	        }
+	    },
+	    error: function() {
+	        //请求出错处理
+	        console.log('ajax is error');
+	    }
+	});
+</script>
+
+<style type="text/css">
+	*{
+		margin:0;
+		padding: 0;
+	}
+	.city_list_hot{
+		/*border: 1px solid red;*/
+/*		width: 570px;
+		height: 70px;*/
+		margin: 20px auto;
+	}
+	.city_list_all{
+		/*border: 1px solid red;*/
+/*		width: 570px;
+		height: 280px;*/
+		margin: 0 auto;
+	}
+	.citylist label{
+		color: #888;
+		font-size: 19px;
+		margin-right: 20px;
+	}
+	.citylist span{
+		margin: 10px;
+		font-size: 19px;
+		cursor: pointer;
+/*		width: 570px;
+		height: 70px;*/
+/*		width: 1100px;
+		height: 30px;*/
+		margin: 15px auto 10px;
+	}
+	.city_list_all{
+		/*border: 1px solid red;*/
+		/*width: 570px;*/
+		/*height: 280px;*/
+		/*width: 1100px;*/
+		margin: 10px auto 15px;
+	}
+	.citylist p{
+		/*border: 1px solid blue;*/
+		margin: 15px;
+	}
+	.citylist label{
+		color: #888;
+		font-size: 14px;
+		margin-left: 15px;
+		margin-right: 20px;
+		float: left;
+	}
+	.citylist span{
+		margin: 10px;
+		margin-left: 0;
+		font-size: 14px;
+		cursor: pointer;
+		width: 28px;
+		height: 16px;
+	}
+	.citylist i{
+		/*border: 1px solid red;*/
+		font-style: normal;
+		display: block;
+		/*width: 1100px;*/
+		margin-left: 30px;
+	}
+</style>

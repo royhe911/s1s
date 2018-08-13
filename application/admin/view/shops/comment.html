@@ -1,0 +1,402 @@
+<link rel="stylesheet" type="text/css" href="__CDN__/assets/libs/laydate/need/laydate.css?v={$site.version}"/>
+<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="__CDN__/assets/js/vue.min.js"></script>
+<style>
+    .title-left{
+        color: #656565;
+        display: inline-block;
+        width: 75px;
+        text-align: right;
+    }
+    .title-right{
+        font-size: 13px;
+    }
+    .btn-success:hover {
+        border-color: #ddd;
+    }
+    /*这是轮播图片的css 开始位置*/
+    #js-slider {
+        /* background: #000; */
+        width: 100%;
+        position: relative;
+    }
+    #js-slider .slider-ctrl i {
+        display: block;
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        top: 40%;
+        background: #000;
+        cursor: pointer;
+        z-index: 1;
+    }
+    #js-slider .slider-ctrl .slider-left {
+        left: 30px;
+        background: transparent url(../img/p_spirit.png?v=2.0.19) -228px -128px no-repeat;
+    }
+    #js-slider .slider-ctrl .slider-right {
+        right: 30px;
+        background: transparent url(../img/p_spirit.png?v=2.0.19) -347px -28px no-repeat;
+    }
+    #js-slider .slider-scroll {
+        width: 100%;
+        overflow: hidden;
+    }
+    #js-slider .slider-main {
+        width: 100%;
+        /* position: relative; */
+        overflow: hidden;
+        /* left: 50%; */
+        /* margin-left: -285px; */
+    }
+    #js-slider .slider-main .slider-main-img {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    #js-slider .js-slider-ctrl {
+        width: 100%;
+        display: block;
+        position: absolute;
+        top: 87.5%;
+    }
+    #js-slider .slider-ctrl-icon-group {
+        margin: 0 auto;
+    }
+    #js-slider .slider-ctrl-icon {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        margin: 0 5px;
+        cursor: pointer;
+        background: rgba(230, 230, 230, 0.6);
+        box-shadow: 0 0 2px #1a1a1a;
+    }
+    #js-slider .bgColor {
+        cursor: default;
+    }
+    #js-slider .carousel-height {
+        height: 120px;
+    }
+    .ac-ctrl-left,.ac-ctrl-right {
+        /* width: 60px;
+        height: 250px; */
+        /* border: solid 1px #dddddd; */
+    }
+    /*这是轮播图片的css 结束位置*/
+   .carousel{
+   	   display: none;
+   }
+    .carousel-control {
+        width: 60px;
+        height: 250px;
+        border: solid 1px #dddddd;
+        margin-left: 25px;
+        background-color: #fff;
+        background-image:none !important;
+    }
+    .carousel-control.right {
+        /* margin-right: 25px; */
+        margin-left: 0;
+        right: 15px !important;
+    }
+    .carousel-control span {
+        color: #000;
+    }
+    .iconfont {
+        position: absolute;
+        top: 50%;
+        z-index: 5;
+        display: inline-block;
+        margin-top: -10px;
+        margin-left: -8px;
+    }
+    
+    .evaluation_title{
+    	margin-top:30px;
+    	margin-bottom:0px;
+    	line-height:25px;
+    	font-size:18px;
+    	color:#333;    	
+    }
+    .replay{
+    	margin-top:40px;
+    }
+    .replay .replay_title{
+    	padding:0 20px;
+    	line-height:25px;
+    	margin:15px 0;
+    }
+    .replay .replay_title p{
+    	font-size:18px;
+    	color:#333;
+    	line-height:25px;
+    }
+    .replay .replay_content{
+    	padding:0 20px;
+    }
+    .replay .replay_content .description{
+    	font-size:14px;
+    	line-height:25px;
+    	color:#333;
+    	text-indent:2em;
+    }
+    
+    
+</style>
+<div class="panel panel-default panel-intro" style=" margin-bottom: 60px; ">
+    <div class="panel-body" style="padding: 0;">
+        <div class="os-row">
+            <div class="lf" style="width: 160px;height: 128px;">
+                <div class="os-row" style="height: 92px;width: 100%;">
+                    <div style="height: 60px;width: 60px;position: relative;margin: 0 auto;margin-top: 15px;">
+                        <img class="os-img" src="{$Think.config.qiniu.domain}{$data['member_avatar']}">
+                    </div>
+                </div>
+                <p style="text-align: center;">
+                    {$data['nickname']}
+                </p>
+            </div>
+            <div style="padding-left: 160px;">
+                <div class="" style="margin-top: 17px">
+                    <span class="title-left">门店名称：</span><span class="title-right">{$data['shop_name']}</span>
+                </div>
+                <div class="" style="margin-top: 15px">
+                    <span class="title-left">评价级别：</span>
+                    <div style="display: inline-block;">
+                        <div class="star-box-tem" style="margin: 0 auto;">
+                            <div class="cover-image containCenter">
+                            </div>
+                            <div class="cover-green" style="width: {:getStarNumber($data['score'] ?? 0)}px;"></div>
+                            <div class="cover-grey"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="" style="margin-top: 15px">
+                    <span class="title-left"> 日期：</span><span class="title-right">{$data['create_time']}</span>
+                </div>
+            </div>
+        </div>
+        <div style="border-top: 1px solid #dddddd;padding-left:20px;">
+        	<div class="evaluation">
+        		<p class="evaluation_title">评价内容：</p>
+        	</div>
+            <div class="os-row" style="padding:18px 0;">
+                <?php echo htmlspecialchars($data['content']);?>
+            </div>
+            <div class="os-row clearfix" id="img_list">
+                <?php if(!empty($data['images'])) {?>
+                <?php $imglist=explode(',', $data['images']); foreach($imglist as $value) {?>
+                <div class="formControls l ta-imgItem ac-item-box" style="margin-right:20px;">
+                    <img class="os-img"  src="{$Think.config.qiniu.domain}{$value}">
+                </div>               
+                <?php }}?>
+            </div>    
+        </div>
+        <div id="myCarousel" class="carousel slide" style="width: 100%;height: 250px;margin-bottom: 20px" data-interval='false'>
+            <!-- 轮播（Carousel）指标 -->
+            <!-- 轮播（Carousel）项目 -->
+            <div class="carousel-inner" style="width: 570px;height: 250px;margin-left: 110px" data-interval='false'>
+                <?php if(!empty($data['images'])) {?>
+                <?php $index=0; foreach($imglist as $value) {?>
+                <div class="item <?php echo $index==0? 'active': '';?>" style="text-align: center;height: 100%;width: 100%;">
+                    <img src="{$Think.config.qiniu.domain}{$value}" alt="First slide" style="max-width: 100%;max-height:100%;margin: 0 auto">
+                </div>
+                <?php $index++;}}?>
+            </div>
+            <!-- 轮播（Carousel）导航 -->
+            <a class="carousel-control left" href="#myCarousel" data-slide="prev">
+                <span _ngcontent-c3="" aria-hidden="true" class="iconfont icon-zuoyousanjiao"></span>
+            </a>
+            <a class="carousel-control right" href="#myCarousel" data-slide="next">
+                <span _ngcontent-c3="" aria-hidden="true" class="iconfont icon-zuoyousanjiao" style="transform: rotate(180deg)"></span>
+            </a>
+        </div>
+        
+        <!--新增回复-->
+        {if $data.is_reply && $reply != ''}
+        <div class="replay">
+        	<div class="replay_title"><p>回复内容：</p></div>
+        	<div class="replay_content">
+        		<p class="description">
+        			{$reply.reply}
+        		</p>
+        	</div>
+        </div>
+        {/if}
+        
+        <div class="os-row" style="position: fixed;bottom:0;left: 0;width: 100%">
+            <?php if($data['is_show'] == 1){?>
+            <button class="btn btn-warning" data-is_show="1" style="float: left;width: 50%;height: 60px; background-color: #fff;color: #656565;border: 1px solid #ddd;" id="hideCC">隐藏此条评论</button>
+            <?php }else{?>
+            <button class="btn btn-success" data-is_show="0" style="float: left;width: 50%;height: 60px; background-color: #fff;color: #656565; border: 1px solid #ddd;" id="hideCC">显示此条评论</button>
+            <?php }?>
+            <button class="btn btn-danger" style="float: left;width: 50%;height: 60px;  background-color: #fff; color: #34c191;border: 1px solid #ddd; " id="clear">关闭</button>
+        </div>
+        <script>
+        	$('#clear').click(function(){
+        		var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+				parent.layer.close(index); 
+        	})
+            $('#hideCC').click(function () {
+                var formData = {},url;
+                formData.id = '<?php echo $data["id"];?>';
+                formData.is_show = ($(this).attr('data-is_show') == 1) ? 0: 1;
+                url = '<?php echo url("shops/edit_comment");?>';
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: formData,
+                    success: function (result) {
+                        //提示层
+                        layer.msg(result.msg);
+                        setTimeout(function() {
+                            parent.location.reload();
+//                            parent.layer.closeAll();
+                        },1000)
+                    },
+                    error: function(msg){
+                        //提示层
+                        layer.msg('服务器忙，请稍后··');
+                    },
+                    dataType: 'JSON'
+                });
+            });
+            $('#myCarousel').on('slide.bs.carousel', function () {
+                    // do something…
+            })
+            $('#img_list').on('click','img',function(){
+            	$('#myCarousel').show();
+            })
+        </script>
+    </div>
+</div>
+<script>
+    (function () {
+        var slider = {
+            percent: 0,
+            i: 0
+        }, ctrl = {one: true}, ctrl_slider = {number: 0};
+        slider.total = $("#js-slider .slider-main-img");
+        ctrl_slider.total = $("#js-slider .js-slider-ctrl");
+        ctrl_slider.parent = $("<div class='slider-ctrl-icon-group'></div>");
+        ctrl_slider.left = $("#js-slider .ac-ctrl-left");
+        ctrl_slider.right = $("#js-slider .ac-ctrl-right");
+        for (var i = 0; i < slider.total.length; i++) {
+            if (i != 0) {
+                $(slider.total[i]).css("left", "100%");
+                slider.width = parseInt($(slider.total[i]).css("width"));
+                $("<span class='slider-ctrl-icon' data-slider='" + i + "'></span>").appendTo(ctrl_slider.parent)
+            } else {
+                $("<span class='slider-ctrl-icon bgColor' data-slider='" + i + "'></span>").appendTo(ctrl_slider.parent)
+            }
+            ctrl_slider.number += 20;
+        }
+        ctrl_slider.parent.css("width", ctrl_slider.number).appendTo(ctrl_slider.total);
+
+        function moveLeft(windowP) {
+            clearInterval(ctrl.timer);
+            ctrl.one = false;
+            windowP == undefined ? slider.number = slider.i : slider.number = windowP;
+            ctrl.timer = setInterval(function () {
+                $(slider.total[slider.number]).css("left", slider.percent + "%");
+                if (slider.i == (slider.total.length - 1)) {
+                    $(slider.total[0]).css("left", 100 + slider.percent + "%");
+                    if ($("#js-slider [data-slider=0]").has("bgColor")) {
+                        $("#js-slider [data-slider=0]").addClass("bgColor").siblings().removeClass("bgColor")
+                    }
+                } else {
+                    $(slider.total[slider.i + 1]).css("left", 100 + slider.percent + "%");
+                    if ($("#js-slider [data-slider=0]").has("bgColor")) {
+                        $("#js-slider [data-slider=" + (slider.i + 1) + "]").addClass("bgColor").siblings().removeClass("bgColor")
+                    }
+                }
+                slider.left = -parseInt($(slider.total[slider.number]).css("left"));
+                slider.percent -= (100 - slider.left / slider.width * 100) / 10;
+                if (slider.percent == -100) {
+                    slider.percent = 0;
+                    clearInterval(ctrl.timer);
+                    ctrl.one = true;
+                    if (slider.i < slider.total.length - 1) {
+                        slider.i++;
+                    } else {
+                        slider.i = 0;
+                    }
+                }
+                if (slider.percent < -99.9) {
+                    slider.percent = -100;
+                }
+            }, 10);
+        }
+
+        function moveRight(windowP) {
+            clearInterval(ctrl.timer);
+            ctrl.one = false;
+            windowP == undefined ? slider.number = slider.i : slider.number = windowP;
+            ctrl.timer = setInterval(function () {
+                //right out first page
+                $(slider.total[slider.number]).css("left", slider.percent + "%");
+                if (slider.i == 0) {
+                    $(slider.total[(slider.total.length - 1)]).css("left", slider.percent - 100 + "%");
+                    $("#js-slider [data-slider=" + (slider.total.length - 1) + "]").addClass("bgColor").siblings().removeClass("bgColor")
+                } else {
+                    $(slider.total[slider.i - 1]).css("left", slider.percent - 100 + "%");
+                    $("#js-slider [data-slider=" + (slider.i - 1) + "]").addClass("bgColor").siblings().removeClass("bgColor")
+                }
+                slider.left = parseInt($(slider.total[slider.number]).css("left"));
+                slider.percent += (100 - slider.left / slider.width * 100) / 10;
+                if (slider.percent == 100) {
+                    slider.percent = 0;
+                    clearInterval(ctrl.timer);
+                    ctrl.one = true;
+                    if (slider.i > 0) {
+                        slider.i--;
+                    } else {
+                        slider.i = slider.total.length - 1;
+                    }
+                }
+                if (slider.percent > 99.9) {
+                    slider.percent = 100;
+                }
+            }, 10);
+        }
+
+        var timer = null;
+        timer = setInterval(function () {
+            moveLeft();//4second
+        }, 3000);
+        ctrl_slider.total.on("click", "[data-slider]", function () {
+            if (ctrl.one) {
+                var current = ctrl_slider.total.find(".bgColor").attr("data-slider");
+                if ($(this).attr("data-slider") < current) {
+                    slider.i = parseInt($(this).attr("data-slider")) + 1;
+                    moveRight(current);
+                } else if ($(this).attr("data-slider") > current) {
+                    slider.i = parseInt($(this).attr("data-slider")) - 1;
+                    moveLeft(current)
+                }
+            }
+        });
+        ctrl_slider.left.on("click", function () {
+            moveRight();
+        });
+        ctrl_slider.right.on("click", function () {
+            moveLeft();
+        })
+        var sliderLR = $("#js-slider .slider-ctrl");
+        $("#js-slider").mouseover(function () {
+            sliderLR.removeClass("hidden");
+            clearInterval(timer);
+        }).mouseleave(function () {
+            sliderLR.addClass("hidden");
+            clearInterval(timer);
+            timer = setInterval(function () {
+                moveLeft();
+            }, 3000);
+        })        
+    })();
+</script>

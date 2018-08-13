@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="common/meta" /}
+
+    <style type="text/css">
+        body {
+            color:#999;
+
+            /* background:url('{$background}'); */
+            /* background-size:cover; */
+        }
+        a {
+            color:#fff;
+        }
+        .login-panel{margin-top:150px;}
+        .login-screen {
+            max-width:400px;
+            padding:0;
+            /* margin:100px auto 0 auto; */
+
+        }
+        .login-screen .well {
+            border-radius: 3px;
+            -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background: rgba(255,255,255, 0.2);
+            padding: 80px 35px 0 35px;
+            height: 430px;
+        }
+        .login-screen .copyright {
+            text-align: center;
+        }
+        @media(max-width:767px) {
+            .login-screen {
+                padding:0 20px;
+            }
+        }
+        .profile-img-card {
+            width: 100px;
+            height: 100px;
+            margin: 10px auto;
+            display: block;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+            border-radius: 50%;
+        }
+        .profile-name-card {
+            text-align: center;
+        }
+
+        #login-form {
+            margin-top:20px;
+        }
+        #login-form .input-group {
+            margin-bottom:30px;
+        }
+        .head {
+            width:100vw;
+            height: 100px;
+            min-width: 960px;
+            background-color: #ffffff;
+            border: solid 1px #dddddd;
+            /* padding: 15px 0;
+            padding-left: 360px; */
+            position: absolute;
+            top: 0;
+            left: 0;
+            box-sizing: border-box;
+        }
+        .head-b {
+            width: 1100px;
+            position: absolute;
+            top: 15px;
+            left: 360px;
+        }
+        /* img {
+            margin-left: 360px;
+        } */
+        .line {
+            width: 1px;
+            height: 80px;
+            background-image: linear-gradient(0deg,
+            #ffffff 0%,
+            #dddddd 50%,
+            #ffffff 100%);
+            margin: 0 30px;
+        }
+        .head-d {
+            /* margin-left:30px;
+            padding-left: 30px;
+            border-left:1px solid  */
+        }
+        .p1 {
+            font-size: 26px;
+            color: #676767;
+        }
+        .p2 {
+            margin-top: 9px;
+            font-size: 16px;
+            color: #999;
+        }
+        body {
+            
+        }
+        @media screen and (max-width:1150px){
+            .container {
+                background-color: #f5f5f5;
+                background:url('__CDN__/assets/img/login.png') no-repeat;
+                background-size: 600px 455px !important;
+                background-position: 0 162px;
+                width: 800px !important;
+                margin: 0 auto;
+                height: 750px;
+                margin-top: -40px !important;
+                min-width: 1150px;
+                /* height: 880px; */
+                padding: 140px 400px 179px 0;
+                position: relative;
+             }
+             .login-wrapper {
+                 right: 20px !important;
+                 height: 380px !important;
+                 margin-top: 20px;
+             }
+             .login-screen .well {
+                 height: 380px !important;
+                 padding: 60px 35px 0 35px !important;
+             }
+             .head-b {
+                 left: 280px;
+             }
+        }
+        @media screen and (max-width:1600px){
+            .container {
+                margin-top: 0 !important;
+             }
+        }
+        @media screen and (max-width:1400px){
+            .container {
+                margin-top: 100px !important;
+             }
+        }
+        @media screen and (max-width:1366px){
+            .container {
+                margin-top: 0 !important;
+             }
+        }
+        @media screen and (max-width:1280px){
+            .container {
+                margin-top: 100px !important;
+             }
+        }
+        @media screen and (max-width:1280px) and (max-height:768px){
+            .container {
+                margin-top: -50px !important;
+                background-size: 600px 455px !important;
+             }
+             .login-wrapper {
+                 right: 20px !important;
+                 height: 380px !important;
+                 margin-top: 20px;
+             }
+             .login-screen .well {
+                 height: 380px !important;
+                 padding: 60px 35px 0 35px !important;
+             }
+             .head-b {
+                 left: 280px;
+             }
+        }
+        @media screen and (max-width:1280px) and (max-height:720px){
+            .container {
+                margin-top: -50px !important;
+                background-size: 600px 455px !important;
+             }
+             .login-wrapper {
+                 right: 20px !important;
+                 height: 380px !important;
+                 margin-top: 20px;
+             }
+             .login-screen .well {
+                 height: 380px !important;
+                 padding: 60px 35px 0 35px !important;
+             }
+             .head-b {
+                 left: 280px;
+             }
+        }
+        @media screen and (max-width:1280px) and (max-height:600px){
+            .container {
+                margin-top: -60px !important;
+                background-size: 400px 355px !important;
+             }
+             .login-wrapper {
+                 right: 20px !important;
+                 height: 270px !important;
+                 margin-top: 20px;
+             }
+             .login-screen .well {
+                 height: 270px !important;
+                 padding: 0px 35px 0 35px !important;
+             }
+             .head-b {
+                 left: 280px;
+             }
+        }
+        @media screen and (max-width:1152px){
+            .container {
+                margin-top: 0 !important;
+             }
+        }
+        .container {
+            background-color: #f5f5f5;
+            background:url('__CDN__/assets/img/login.png') no-repeat;
+            /* background-size: 0 475px; */
+            background-position: 0 162px;
+            width: 1100px;
+            margin: 0 auto;
+            margin-top: 100px;
+            height: 750px;
+            min-width: 1024px;
+            /* height: 880px; */
+            padding: 140px 400px 179px 0;
+            position: relative;
+        }
+        .login-wrapper {
+            width: 386px;
+            height: 430px;
+            position: absolute;
+            top: 140px;
+            right: 0px;
+            background-color: #ffffff;
+            border-radius: 6px;
+            border: solid 1px #dddddd;
+            display: table-cell;
+        }
+        .form-control{
+            width: 316px !important;
+            height: 40px;
+            background-color: #ffffff;
+            border-radius: 4px;
+            /* border: solid 1px #34c191; */
+            padding-left: 48px;
+            /* margin-bottom: 30px; */
+        }
+        button {
+            width: 140px !important;
+            height: 40px;
+            background-color: #34c191;
+            border-radius: 4px;
+        }
+        .input-group-addon {
+            position: absolute;;
+            top: 5px;
+            left: 5px;
+            border: none;
+            z-index: 100;
+            background-color: transparent !important;
+
+        }
+        .footer {
+            width: 100vw;
+            line-height: 100px;
+            text-align: center;
+            background-color: #34c191;
+            font-size: 14px;
+            color:#fff;
+            min-width: 960px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            /* position: fixed;
+            bottom: 0; */
+        }
+        .check {
+            width: 186px !important;
+            height: 40px;
+        }
+        #toast-container {
+            height: 40px;
+        }
+        #toast-container .toast {
+            line-height: 40px;
+        }
+        #toast-container .toast .toast-message {
+            display: table-cell;
+            vertical-align: middle;
+            /* margin-top: 20px; */
+        }
+        .contain {
+            height: 100vh;            
+            width: 100vw;
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+    <script>
+        if(typeof parent.$ != "undefined"){
+            parent.window.location.reload();
+        }
+    </script>
+</head>
+<body>
+    <div class="contain">
+        <div class="head clearfix">
+            <div class="head-b">
+                <img src="__CDN__/assets/img/logo1.png" alt="" class="pull-left">
+                <p class="line pull-left"></p>
+                <div class="pull-left hear-d">
+                    <p class="p1">欢迎登录</p>
+                    <p class="p2">v<?php echo empty($config['fastadmin']['version']) ? '1.0': $config['fastadmin']['version'];?>  后台管理系统</p>
+                </div>
+            </div>
+        </div>
+        <div class="container clearfix">
+            <!-- <div class="back-img">
+                <img src="__CDN__/assets/img/login.png" alt="">
+            </div> -->
+            <div class="login-wrapper pull-right">
+                <div class="login-screen">
+                    <div class="well">
+                        <div class="login-form">
+                            <!-- <img id="profile-img" class="profile-img-card" src="/assets/img/avatar.png" /> -->
+                            <!-- <p id="profile-name" class="profile-name-card"></p> -->
+    
+                            <form id="login-form">
+                                <div id="errtips" class="hide"></div>
+                                {:token()}
+                                <div class="input-group" style="margin-bottom: 10px;height: 60px;">
+                                    <div class="ac-event-box" data-msg-empty="请输入用户名称">
+                                        <div class="input-group-addon"><span class="iconfont icon-my" aria-hidden="true"></span></div>
+                                        <input type="text" class="form-control ac-input" placeholder="{:__('Username')}" id="username" name="username" autocomplete="off" value="" data-rule="{:__('Username')}:required;username" />
+                                    </div>
+                                </div>
+    
+                                <div class="input-group" style="margin-bottom: 10px;height: 60px;">
+                                    <div class="ac-event-box" data-msg-empty="请输入用户密码">
+                                        <div class="input-group-addon"><span class="iconfont icon-suo" aria-hidden="true"></span></div>
+                                        <input type="password" class="form-control ac-input" id="password" placeholder="{:__('Password')}" name="password" autocomplete="off" value="" data-rule="{:__('Password')}:required;password" />
+                                    </div>
+                                </div>
+                                {if $config.fastadmin.login_captcha}
+                                <div class="input-group" style="width: 100%;margin-bottom: 10px;height: 60px;">
+                                    <div class="ac-event-box" data-msg-empty="请输入验证码">
+                                        <div class="input-group-addon"><span class="iconfont icon-yanzhengma" aria-hidden="true"></span></div>
+                                        <input type="text" id="captcha" name="captcha" class="form-control check pull-left ac-input" placeholder="请输入验证码" data-rule="{:__('Captcha')}:required;length(4)" />
+                                            <span class="input-group-addon pull-left" style="padding:0;border:none; width: 110px;height: 40px;position: static;margin-left: 15px; border:1px solid #ddd;text-align: center;">
+                                                <img src="{:captcha_src()}" id="captcha_img" width="108" height="38" onclick="this.src = '{:captcha_src()}?r=' + Math.random();"/>
+                                            </span>
+                                    </div>
+                                </div>
+                                {/if}
+                                <!-- <div class="form-group">
+                                    <label class="inline" for="keeplogin">
+                                        <input type="checkbox" name="keeplogin" id="keeplogin" value="1" />
+                                        {//:__('Keep login')}
+                                    </label>
+                                </div> -->
+                                <div class="form-group clearfix">
+                                    <span type="submit" class="btn btn-success btn-lg btn-block pull-left" id="login_btn" style="width: 140px;height: 40px;">{:__('Sign in')}</span>
+                                    <button type="reset" class="btn btn-success btn-lg btn-block pull-left " style="margin-left: 32px; margin-top: 0;background-color: #fff;color: #34c191;border:1px solid #34c191">重置</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--<p class="copyright"><a href="#">Powered By FastAdmin</a></p>-->
+                </div>
+            </div>
+        </div>
+        <div class="footer" style="position: absolute;z-index: 100;">
+            <p style="padding: 0;margin: 0;">粤ICP备15008013号-7 Copyright©2017-2018 深圳市蜗牛窝科技有限公司 版权所有</p>
+        </div>
+    </div>
+<script src="__CDN__/assets/js/backend/jquery.js?"></script>
+<script type="text/javascript" charset="utf-8" src="__CDN__/assets/js/backend/error_msg.js?v={$site.version}"></script>
+<script>
+    (function () {
+        //调用防错处理,start
+        //公共的弹出框样式
+        var public_style_error = {
+            display: 'inline-block',
+            overflow: 'inherit',
+            marginTop:"3px"
+        };
+        // 输入框的必填项调用
+        fun.error_msg_clear({element:true}, public_style_error);
+        //非必填输入框和div,select的防错处理
+        fun.error_clear_box();
+        //调用防错处理结束
+
+        //用户名称验证方法
+        function validate_user(id,is_focus) {
+            var user =id;
+            var user_p = user.parents(".ac-event-box");
+            var user_obj = {
+                element: user,
+                element_info: user_p,
+                msg:user_p.attr("data-msg-empty")
+            };
+            if(!fun.error_msg_create_input(user_obj,public_style_error)) {
+                return;
+            }
+            return user.val();
+        }
+        //用户名验证
+
+        $("#login_btn").on("click",function() {
+           var msg = {};
+           //用户名称
+            var username_elem = $("#username");
+           var username = validate_user(username_elem, true);
+           if(typeof username=="string"){
+               msg.username = username;
+           }else{
+               return;
+           }
+
+           //用户密码
+            var password_elem = $("#password");
+           var userpwd = validate_user(password_elem, true);
+           if(typeof userpwd=="string"){
+               msg.userpwd = userpwd;
+           }else{
+               return;
+           }
+
+           //验证码
+            var captcha_elem = $("#captcha");
+           var captcha = validate_user(captcha_elem, true);
+           if(typeof captcha=="string"){
+               msg.captcha = captcha;
+           }else{
+               return;
+           }
+            var captcha_img = $("#captcha_img");
+           $.post('', {username: username, password: userpwd, captcha: captcha}, function (data) {
+               var captcha_obj = {
+                   element:captcha_elem,
+                   element_info:captcha_elem.parents(".ac-event-box")
+               };
+               console.log(data);
+               if(data.code==1) {
+                   window.location = "/" + data.data.url;
+               }else if(data.code==0) {
+                   var username_obj = {
+                       element:username_elem,
+                       element_info:username_elem.parents(".ac-event-box")
+                   };
+                   var password_obj = {
+                       element:password_elem,
+                       element_info:password_elem.parents(".ac-event-box")
+                   };
+                   if(data.msg.indexOf("Username is incorrect")!=-1) {
+                       username_obj.msg = "您输入的用户名错误";
+                       fun.error_msg_create_box(username_obj,public_style_error);
+                   }else if(data.msg.indexOf("Password is incorrect")!=-1) {
+                       password_obj.msg = "您输入的密码错误";
+                       fun.error_msg_create_box(password_obj,public_style_error);
+                   }else if(data.msg.indexOf("验证码错误")!=-1){
+                       captcha_obj.msg = "验证码错误";
+                       fun.error_msg_create_box(captcha_obj,public_style_error);
+                   }else{
+                       if (data.msg) {
+                           captcha_obj.msg = data.msg;
+                       } else {
+                           captcha_obj.msg = "用户名或密码错误";
+                       }
+                       fun.error_msg_create_box(captcha_obj,public_style_error);
+                   }
+                   captcha_img.click();
+               }else{
+                   captcha_obj.msg = data.msg;
+                   fun.error_msg_create_box(captcha_obj,public_style_error);
+                   captcha_img.click();
+               }
+           })
+        })
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <title>门店详情</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/share/reset.css">
+    <link rel="stylesheet" href="/assets/css/share/shop.css">
+    <script src="/assets/js/share/rem.js"></script>
+</head>
+
+<body>
+    <div class="container" >
+        <div class="header">
+            <img src="/assets/img/logo.png" alt="">
+            <a href="https://{$Think.config.url_prefix_www ?? ''}.{$Think.config.url_domain_root}/app_download/">
+                下载APP
+            </a>
+        </div>
+        <div class="shop-info">
+            <div class="center image"><img src="{$Think.config.qiniu.domain ?? ''}{$data.preview_image}" alt=""></div>
+            <div class="info">                
+                <div class="name">
+                    <div>
+                        <img src="/assets/img/dpxq_dp.png" alt="">
+                        <p>{$data.name}</p>
+                    </div>
+                    <div class="l-star-box">
+                        <?php if(!empty($data['score'])){?>
+                        <div class="star-box-tem">
+                            <div class="cover-image center">
+                                <img src="/assets/img/five_star.png" />
+                            </div>
+                            <div class="cover-green" style="width: <?php echo $data['score'] + 1;?>em;font-size: 12px;"></div>
+                            <div class="cover-grey"></div>
+                        </div>
+                        <?php }?>
+                        <span class="sd-score-box">{$data.score?$data.score:'暂无评'}分</span>
+                    </div>
+                </div>
+                <div class="address">
+                    <div class="address-l">
+                        <img src="/assets/img/dpxq_dz.png" alt="">
+                        <p>{$data.address}</p>
+                    </div>
+                    <div class="address-r center">
+                        <img src="/assets/img/dpxq_dh.png" alt="">
+                    </div>
+                </div>
+                <div class="time">
+                    <img src="/assets/img/dpxq_yysj.png" alt="">
+                    <p>营业时间:{$data.business_hours}</p>
+                </div>
+            </div>
+        </div>
+        <?php if(!empty($data['desc'])){?>
+        <div class="introduce">
+            <h3 class="title-com">
+                <div class="title-l">
+                    <img src="/assets/img/dpxq_fg.png" alt="">
+                    <p>门店介绍</p>
+                </div>
+            </h3>
+            <p class="introduce-p"><?php echo htmlspecialchars_decode($data['desc']);?></p>
+        </div>
+        <?php }?>
+        <!--
+        <div class="discount">
+            <h3 class="title-com">
+                <div class="title-l">
+                    <img src="/assets/img/dpxq_fg.png" alt="">
+                    <p>优惠信息</p>
+                </div>
+            </h3>   
+            <div class="discount-info">
+                <div class="line">
+                    <div class="discount-l">
+                        <h2>开年<span>大促</span>&nbsp;&nbsp;进店<span>有礼</span></h2>
+                    </div>
+                    <div class="discount-r">
+                        <div class="center">
+                            <img src="{$Think.config.qiniu.domain ?? ''}{$data.preview_image?$data.preview_image:'member/default.jpg'}" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        -->
+        <?php if(is_array($data['good_list']) && !empty($data['good_list'])) foreach($data['good_list'] as $key => $value){?>
+        <div class="shop">
+            <h3 class="title-com">
+                <div class="title-l">
+                    <img src="/assets/img/dpxq_fg.png" alt="">
+                    <p>商品介绍</p>
+                </div>
+            </h3>
+            <div class="shop-list">
+                <div class="shop-info">
+                    <div class="shop-t">
+                        <div class="img center">
+                            <img src="{$Think.config.qiniu.domain ?? ''}{$value.preview_image}" alt="">
+                        </div>
+                    </div>
+                    <div class="shop-b">
+                        <p>{$value.title}</p>
+                        <p>
+                            <span>
+                                <?php if ($value['price'] > 0){?>
+                                <b>￥</b><b>{$value.price}</b>
+                                <?php }else{?>
+                                <b>价格到店咨询</b>
+                                <?php }?>
+                            </span>
+                            <span>{$value.brand_name}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php }?>
+        <div class="comment">
+            <h3 class="title-com">
+                <div class="title-l">
+                    <img src="/assets/img/dpxq_fg.png" alt="">
+                    <p>网友点评<span>(<?php echo empty($data['comment_list']) ? 0: count($data['comment_list']);?>)</span></p>
+                </div>
+            </h3>
+            <div class="comment-list">
+                <?php if(is_array($data['comment_list']) && !empty($data['comment_list'])) foreach($data['comment_list'] as $key => $value){?>
+                <div class="list-main">
+                    <img src="{$Think.config.qiniu.domain ?? ''}{$value.member_avatar}" alt="">
+                    <div class="list-r">
+                        <p><span>{$value.nickname}</span><span>{$value.create_time}</span></p>
+                        <div class="star-list">
+                            <span>评分</span>
+                            <div class="l-star-box">
+                                <div class="star-box-tem">
+                                    <div class="cover-image center">
+                                        <img src="/assets/img/five_star.png" />
+                                    </div>
+                                    <div class="cover-green" style="width: .{$value.score}rem;"></div>
+                                    <div class="cover-grey"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p><?php echo htmlspecialchars_decode($value['content']);?></p>
+                        <?php if (!empty($value['images'])){?>
+                        <div class="preview">
+                            <?php $arr = explode(',', trim($value['images'], ',')); foreach($arr as $key => $value_img) {?>
+                            <div class="center">
+                                <img src="{$Think.config.qiniu.domain ?? ''}{$value_img?$value_img:'member/default.jpg'}" alt="">
+                            </div>
+                            <?php }?>
+                        </div>
+                        <?php }?>
+                    </div>
+                </div>
+                <?php }?>
+            </div>
+        </div>
+        
+        <!--
+        <div class="good">
+            <h3 class="title-com">
+                <div class="title-l">
+                    <img src="/assets/img/dpxq_fg.png" alt="">
+                    <p>附近的店铺</p>
+                </div>
+            </h3>
+            <div class="good-main">
+                <?php if(is_array($data['shop_list']) && !empty($data['shop_list'])) foreach($data['shop_list'] as $key => $value) {?>
+                <div class="good-list">
+                    <div class="img center">
+                        <img src="{$Think.config.qiniu.domain ?? ''}{$value.preview_image?$value.preview_image:'member/default.jpg'}" alt="">
+                    </div>
+                    <div class="good-r">
+                        <p>{$value.name}</p>
+                        <div class="l-star-box">
+                            <div class="star-box-tem">
+                                <div class="cover-image center">
+                                    <img src="/assets/img/five_star.png" />
+                                </div>
+                                <div class="cover-green" style="width: .{$value.score}rem;"></div>
+                                <div class="cover-grey"></div>
+                            </div>
+                        </div>
+                        <p><span>距当前门店<?php echo ($value['distance'] > 1000) ? round($value['distance'] / 1000, 1) . 'km': intval($value['distance']) . 'm';?></span>|<span>{$value.area_name ?? ''}</span></p>
+                    </div>
+                </div>
+                <?php }?>
+            </div>
+        </div>
+        -->
+    </div>
+</body>
+<script src="/assets/js/share/scroll.js"></script>
+</html>

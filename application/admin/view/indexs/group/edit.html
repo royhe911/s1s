@@ -1,0 +1,147 @@
+<style>
+	html,body{
+		width:100%;
+		height:100%;
+		background:#fff;
+	}
+	
+    .op {
+        width: 150px !important;
+    }
+    /*校验字体样式*/
+    span.error{
+        /*border: 1px solid red;*/
+        color: red;
+        margin-top: 1.5px;
+        height: 28px;
+        font-size: 12px;
+    }
+    #panel-body{
+    	padding-top:40px;
+    }
+    #panel-body label{
+    	width:100px!important;
+    	text-align: right;
+    }
+    #c-name{
+    	width:200px!important;
+    }
+    #c_label{
+    	line-height:100px!important;
+    }
+</style>
+<!--<div class="panel-heading row" style="padding:0 15px;color: #999;font-size: 12px; line-height: 50px; background-color: transparent">
+    <div style="background-color: #e8edf0;width: 100%; height: 50px;padding-left: 15px">
+        <div class="lf">
+            <i class="fa fa-home" style="font-size: 14px;"></i>
+        </div>
+        <div class="panel-lead lf" style="margin: 0px;">首页管理&nbsp;&nbsp;&nbsp;> </div>
+        <a href="<?php echo url('good/index');?>" class="panel-lead lf pl" style="margin: 0px; color: #999 !important;">&nbsp;&nbsp;分组管理&nbsp;&nbsp;&nbsp;> </a>
+        <div class="panel-lead lf pl" style="margin: 0px;color: #34c191;">&nbsp;&nbsp;&nbsp;
+            <?php echo empty($row) ? '添加分组': '编辑分组';?>
+        </div>
+    </div>
+</div>-->
+<div class="panel-body" id='panel-body'>
+    <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+        <input id="c-id" data-rule="required" class="form-control" name="" type="hidden" value="{$row.id ?? ''}">
+        <div class="form-group">
+            <label for="c-price" class="control-label col-xs-12 col-sm-2">分组名称:</label>
+            <div class="col-xs-12 col-sm-8" style="float:left;width:auto">
+                <input id="c-name" name="c-name" class="form-control op" type="text" value="{$row.name ?? ''}" style="display: inline-block;width: 300px;margin-right: 10px; width: 150px;" >
+            </div>
+        </div>
+        <div class="form-group" style="margin-top:30px;">
+            <label for="c-image"id="c_label" class="control-label col-xs-12 col-sm-2"><span style="color: #ff777c;">*</span> 资讯预览图:</label>
+            <div class="l ac-img-container ac-img-url-box" data-name="image">
+                {if isset($row.image_url) && $row.image_url != ''}
+                <div class="formControls l mr-15 ta-imgItem ac-item-box">
+                    <i class="os-radius"></i>
+                    <img class="os-img" src="{$Think.config.qiniu.domain}{$row.image_url}" data-log="{$row.image_url}">
+                </div>
+                <div class="formControls l ta-imgItem ac-add hidden" style="width: 100px;height: 100px;">
+                    <img class="os-pointer" src="__CDN__/assets/img/defaultAdd.png" id="img" data-picture="0">
+                </div>
+                {else}
+                <div class="os-row">
+                    <div class="formControls l ta-imgItem ac-add" style="width: 100px;height: 100px;">
+                        <img class="os-pointer" src="__CDN__/assets/img/defaultAdd.png" id="img" data-picture="0">
+                    </div>
+                </div>
+                {/if}
+            </div>
+        </div>
+        <div class="form-group" style="margin-top:40px;">
+            <label for="submit" class="control-label col-xs-12 col-sm-2"></label>
+            <div class="col-xs-12 col-sm-8" style="text-align: center;">
+                <input id="button_ok" name="submit" type="button" value="保 存" class="btn btn-success btn-embossed"></input>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- 表单校验插件 -->
+<script type="text/javascript" charset="utf-8" src="__CDN__/assets/js/backend/jquery-validation-1.14.0/jquery.validate.js?v={$site.version}"></script>
+<script type="text/javascript" charset="utf-8" src="__CDN__/assets/js/backend/jquery-validation-1.14.0/additional-methods.js"></script>
+<script type="text/javascript" src="__CDN__/assets/js/backend/validate/good/edit.js"></script>
+
+<script>
+    function del_store_val(os_this) {
+        var this_parent = $(os_this).parent();
+        this_parent.prev().removeClass("hidden");
+        this_parent.next().val("");
+        console.log(this_parent.next());
+        console.log(this_parent.next().val());
+
+        this_parent.remove();
+        // var brand_item = $("#c-brand_id");
+        // brand_item.html('<option value="0">请先选择门店</option>');
+        // var type_item = $("#c-type_id");
+        // type_item.html('<option value="0">请选择商品分类</option>');
+    }
+    // 图片上传
+    up_img_System("img");
+    // 图片删除方法
+    $("#edit-form").on("click", ".ac-item-box i", function () {
+        var os = $(this).parent();
+        var add = os.nextAll(".ac-add");
+        os.remove();
+        var isMain = $("#edit-form .ac-item-box");
+        if (os.children("sup").length != 0 && isMain.length > 0) {
+            $(isMain[0]).prepend("<sup></sup>");
+        }
+        console.log(add.length);
+        if (add.hasClass("hidden")) {
+            add.removeClass("hidden");
+        }
+    });
+
+    $('#button_ok').click(function () {
+        // 获取上传图片地址
+        var img_box = $(".ac-img-url-box");
+        var img_item_box, img_item, img_name;
+        var msg = {};
+        for (var i = 0; i < img_box.length; i++) {
+            img_item_box = $(img_box[i]);
+            img_name = img_item_box.attr("data-name");
+            img_item = img_item_box.find(".ac-item-box img");
+            if (img_item.length > 0) {
+                msg.image_url = img_item.attr("data-log");
+            } else {
+                layer.alert('请上传资讯预览图',{icon: 5});
+                return;
+            }
+        }
+        msg.name = $('#c-name').val();
+        $.post('', msg, function (data) {
+            if (data.code == 1) {
+                layer.msg(data.msg, {
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function () {
+                    window.parent.location.reload();
+                });
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        })
+    })
+</script>

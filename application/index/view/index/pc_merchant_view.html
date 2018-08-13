@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>千寻狗</title>
+	<link rel="stylesheet" type="text/css" href="/static/index/css/pc_merchant_view.css">
+	<script type="text/javascript" src="/static/index/js/jquery/jquery.js"></script>
+</head>
+<body>
+	<!-- 确认密码激活 -->
+	<div class="merchants_active_pc">
+		<div class="add_merchants_top">
+			<span class="top_text">激活账户</span>
+		</div>
+		<div class="add_merchants_content">
+			<div class="content_top">
+				<p class="content_top_first"><b>欢迎激活千寻狗后台服务</b></p>
+				<p class="content_top_second">多终端一站式服务</p>
+			</div>
+			<div class="content_logo">
+				<div class="logo_wrapper">
+					<div class="logo_item_box">
+						<div class="logo_item">
+							<img src="/static/index/icon/1.png">
+						</div>
+						<span class="logo_text logo_text_shop">门店管理</span>
+					</div>
+					<div class="logo_item_box">
+						<div class="logo_item">
+							<img src="/static/index/icon/2.png">
+						</div>
+						<span class="logo_text logo_text_good">商品管理</span>
+					</div>
+					<div class="logo_item_box logo_item_box_last">
+						<div class="logo_item">
+							<img src="/static/index/icon/3.png">
+						</div>
+						<span class="logo_text logo_text_area">商圈管理</span>
+					</div>
+				</div>
+			</div>
+			<div class="content_login">
+			    <div class="form-group">
+			        <label class="control-label col-sm-2">登录账号：</label>
+			        <div id="login_id" class="col-sm-8">{$username}</div>
+			    </div>
+			    <div class="form-group">
+			        <label class="control-label col-sm-2">登录密码：</label>
+			        <div class="login_pwd_wrapper col-sm-8">
+			            <div class="login_pwd_box ac-event-box" data-msg-empty="请输入密码">
+			                <input id="login_pwd" class="form-control ac-input" name="" type="password" value="{$row.title ?? ''}">
+			            </div>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="control-label col-sm-2">再次输入：</label>
+			        <div class="login_pwd_wrapper col-sm-8">
+			            <div class="login_pwd_box ac-event-box" data-msg-empty="请再次输入密码">
+			                <input id="login_repeat_pwd" class="form-control ac-input" name="" type="password" value="{$row.title ?? ''}">
+			                <input id="sign" type="hidden" value="{$sign ?? 0}" >
+			            </div>
+			        </div>
+			    </div>
+				<div class="btn_ok_box btn_ok form-group">
+				    <span type="button" class="btn btn-success btn-embossed">立即激活</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 激活成功页面 -->
+	<div class="pc_activate merchant_noShow">
+		<div class="activate_title">
+			<span class="top_text">激活账户</span>
+		</div>
+		<div class="activate_content">
+			<div class="head">
+				<div class="logo">
+				</div>
+				<p>您的账号已成功激活</p>
+			</div>
+			<div class="content">
+				请点击下面按钮直接进入<br/>
+				"千寻狗后台服务"平台进行登录
+			</div>
+			<div class="foot">
+				<a href="https://{$Think.config.url_prefix_admin ?? ''}.{$Think.config.url_domain_root}/index/login">点击进入</a>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="/static/index/js/error_msg/error_msg.js"></script>
+<!-- 	<script type="text/javascript" src="/static/index/js/jquery-validation-1.14.0/jquery.validate.js"></script>
+	<script type="text/javascript" src="/static/index/js/jquery-validation-1.14.0/additional-methods.js"></script> -->
+	<script type="text/javascript" src="/static/index/js/pc_merchant_view.js"></script>
+</body>
+</html>

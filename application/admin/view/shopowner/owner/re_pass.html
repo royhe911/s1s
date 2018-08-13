@@ -1,0 +1,84 @@
+<script type="text/javascript" src="__CDN__/assets/libs/laydate5/laydate.js"></script>
+<script src="__CDN__/assets/js/vue.min.js"></script>
+<style>
+	.content_a{		
+		padding-top:55px;
+		background:#F0F3F5;
+		outline: none;
+	}
+	
+	.password_div{
+		margin-bottom:30px;
+		text-align: center;
+	}
+	.password_div .password_lab{
+		display: inline-block;
+		font-size:16px;
+	}
+	#password{
+		width:250px;
+		height:35px;
+		display: inline-block;
+		font-size:16px;
+	}
+	.sub_div{
+		text-align: center;
+	}
+	.sub_div button{
+		width:140px;		
+		height:35px;
+		line-height:35px;
+		padding:0!important;
+		background:#34c591;
+		font-size:16px;
+	}
+</style>
+<div class="content_a">
+	<div>
+		<div class="password_div">
+			<label for="password" class="password_lab">新密码：</label>
+            <input class="form-control title-input" id="password" type="password" placeholder="新密码">
+        </div>
+        <div class="sub_div">
+            <button class="btn btn-success btn-ok btn-embossed br" id="submit">确定</button>
+        </div>    		
+	</div>
+</div>
+
+<script type="text/javascript">
+	
+//	修改密码
+	$(function(){
+		$('#submit').click(function(){			
+			var formData = {},htmlInstance = $(this);
+            formData.pass = $('#password').val();
+            formData.business_id = '{$business_id}';
+            var url = '/shopowner/owner/re_pass';
+			layer.confirm('您确定要修改为此密码？', {
+                btn: ['确定','取消'] //按钮
+          }, function(){
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: formData,
+                    success: function (result) {
+                        //提示层
+                        layer.msg(result.msg);
+                        if (result.code == 1){
+                            htmlInstance.parents(".ac-tr").empty();
+                            setTimeout(function(){
+                            	window.parent.location.reload()
+                            },1000)
+                        }
+                        
+                    },
+                    error: function(msg){
+                        //提示层
+                        layer.msg('服务器忙，请稍后··');
+                    },
+                    dataType: 'JSON'
+                });
+            });
+		})
+	})
+</script>

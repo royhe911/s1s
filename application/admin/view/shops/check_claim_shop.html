@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>审核不通过原因</title>
+	</head>
+	<style>
+		body {
+			width: 100%;
+			height: 100%;
+			background: #fff;
+			padding-top: 20px;
+		}
+		
+		.title {
+			height: 35px;
+			line-height: 35px;
+			padding-left: 20px;
+			font-size: 16px;
+		}
+		
+		.description {
+			text-align: center;
+		}
+		
+		.description textarea {
+			resize: none;
+			outline: none;
+			text-indent: 24px;
+			font-size:14px;
+		}
+		
+		.bottom {
+			margin-top: 20px;
+			text-align: center;
+		}
+		.error{
+			height:20px;
+			line-height:20px;
+			color:red;
+			padding-left:50px;
+			display: none;
+		}
+	</style>
+	<body>
+		<div class="content_c">
+			<p class="title">说明：</p>
+			<div>
+				<div class="description">
+					<textarea name="" rows="6" cols="48" maxlength="100" placeholder="最多可输入100个字" id="text"></textarea>
+				</div>
+				<p class="error">请输入不通过原因</p>
+				<div class="bottom">
+					<button class="btn btn-success btn-add bs-bars-com" id="submit">确定</button>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script>
+	$('#text').focus(function(){
+		$('.error').hide();
+	})
+	$('#text').blur(function(){
+		var description=$(this).val();
+		if(description==''){
+			$('.error').show();
+		}else{
+			$('.error').hide();
+		}
+	})
+	$('#submit').click(function(){
+		var content=$("#text").val();
+		if(content==''){
+			$('.error').show();
+		}else{
+			var formData = {};
+	        formData.msg = content;
+	        formData.ids = {$ids};
+            formData.status = 0;
+	        var url = '';
+	        //询问框
+	        layer.confirm('您确定要提交？', {
+	            btn: ['确定','取消'] //按钮
+	        }, function(){
+	            $.ajax({
+	                type: 'POST',
+	                url: url,
+	                data: formData,
+	                success: function (result) {
+	                    //提示层
+	                    layer.msg(result.msg);
+	                    if (result.code == 1){
+	                        layer.close();
+                            window.parent.location.href = '/shops/pending_shop';
+	                    }
+	                },
+	                error: function(msg){
+	                    //提示层
+	                    layer.msg('服务器忙，请稍后··');
+	                },
+	                dataType: 'JSON'
+	            });
+	        });
+		}
+		
+	})
+</script>
