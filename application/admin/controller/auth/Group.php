@@ -276,7 +276,7 @@ class Group extends Backend
             //读取当前角色下规则ID集合
             $adminRuleIds = $this->auth->getRuleIds();
             //是否是超级管理员
-            $superadmin = $this->checkRegionAllAuth();;
+            $superadmin = $this->auth->isSuperAdmin();
             //当前拥有的规则ID集合
             $currentRuleIds = $id ? explode(',', $currentGroupModel->rules) : [];
 
