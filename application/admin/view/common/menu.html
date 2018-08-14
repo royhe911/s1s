@@ -9,9 +9,9 @@
         <div class="pull-left image">
             <a href="general/profile" class="addtabsit"><img src="__CDN__{$admin.avatar}" class="img-circle" /></a>
         </div>
-        <div  {if isset($city_list) && count($city_list) > 1}onclick="layer_open('选择城市', '/region/region_window',{if $is_all_city}{w:'1200px',h:'800px'}{else}{w:'650px',h:'500px'}{/if})"{/if} id="region_window" class="pull-left info">
+        <div id="region_window" class="pull-left info">
             <p>{$admin.nickname}</p>
-            <i class="fa fa-circle text-success"></i> {$city_name ?? ''}
+            <i class="fa fa-circle text-success"></i> {$role.name ?? ''}
         </div>
     </div>
     <ul class="sidebar-menu">

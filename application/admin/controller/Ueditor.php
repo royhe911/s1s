@@ -111,15 +111,6 @@ class Ueditor
         $info = $upload->upload($prefix);
         $error = $upload->getError();
 
-        // 保存图片到数据库
-//        if ($info) {
-//            $model = Loader::model("File");
-//            foreach ($info as $v) {
-//                if (is_array($v)) {
-//                    $model->insertRecord($v, $cate);
-//                }
-//            }
-//        }
         if (!empty($error)) {
             $ret['state'] = $error;
         } else {

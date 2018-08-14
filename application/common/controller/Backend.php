@@ -256,6 +256,8 @@ class Backend extends Controller
         $this->assign('auth', $this->auth);
         //页码
         $this->assign('page_list', $this->page_list);
+        // 角色
+        $this->assign('role', AuthGroup::getRole($this->auth->getGroupIds()));
         //渲染管理员对象
         $this->assign('admin', Session::get('admin'));
     }

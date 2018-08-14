@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'name' => '千寻狗',
+  'name' => '搜一搜',
   'beian' => '',
   'cdnurl' => '',
   'version' => '1.0.1',

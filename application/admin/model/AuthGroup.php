@@ -32,4 +32,8 @@ class AuthGroup extends Model
         return $dataAll;
     }
 
+    public static function getRole($gid = null)
+    {
+        return self::get($gid);
+    }
 }
