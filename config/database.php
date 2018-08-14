@@ -5,7 +5,7 @@ return [
     // 服务器地址
     'hostname'        => '127.0.0.1,127.0.0.1',
     // 数据库名
-    'database'        => 's1s',
+    'database'        => 's1s_new',
     // 用户名
     'username'        => 'root,root',
     // 密码
