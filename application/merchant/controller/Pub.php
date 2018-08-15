@@ -197,8 +197,11 @@ class Pub extends Controller
                 throw new Exception(lang(10), "10");
             }
             //获取存储open信息
-            $where = [['mobile', '=', $mobile], ['password', '=', $password]];
+            $where = [['mobile', '=', $mobile]];
             $merchant_info = Merchant::master()->where($where)->find();
+            if ($merchant_info->password != md5(md5($password) . $merchant_info->salt)) {
+                throw new Exception(lang(10), "10");
+            }
             if ($merchant_info['status'] != 1) {
                 throw new Exception(lang(10), "10");
             }
