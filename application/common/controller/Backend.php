@@ -25,6 +25,7 @@ class Backend extends Controller
     protected $default_limit = 30;
     protected $cur_limit = 30;
     protected $page_list = [30, 50, 80, 100];
+    protected $result = ['code' => "1", 'msg' => '操作成功', 'data' => null];
     /**
      * 无需登录的方法,同时也就不需要鉴权了
      * @var array

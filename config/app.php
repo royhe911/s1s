@@ -104,5 +104,5 @@ return [
     'url_prefix_admin' => 'admin',
     'url_prefix_www' => 'm',
     'url_prefix_api' => 'api',
-    'url_prefix_bapi' => 'bapi',
+    'url_prefix_merchant' => 'merchant',
 ];

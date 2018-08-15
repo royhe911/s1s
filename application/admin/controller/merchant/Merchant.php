@@ -1,46 +1,41 @@
 <?php
-namespace app\admin\controller;
+namespace app\admin\controller\merchant;
 
 use think\facade\Config;
 use think\facade\Hook;
 use think\Validate;
 
 use app\admin\model\AdminLog;
+use app\common\model\Merchant as MerchantM;
 use app\common\controller\Backend;
 
 /**
  * 后台首页
  * @internal
  */
-class Index extends Backend
+class Merchant extends Backend
 {
-    protected $noNeedLogin = ['login'];
-    protected $noNeedRight = ['index', 'logout'];
-    protected $layout = '';
+    protected $relationSearch = true;
+    protected $layout = 'default2';
 
     /**
      * 后台首页
      */
     public function index()
     {
-        parent::initialize();
-        //左侧菜单
-        $menulist = $this->auth->getSidebar([
-            'dashboard' => 'hot',
-            'addon'     => ['new', 'red', 'badge'],
-            'auth/rule' => __('Menu'),
-            'general'   => ['new', 'purple'],
-        ], $this->view->site['fixedpage']);
-        $action = $this->request->request('action');
-        if ($this->request->isPost())
-        {
-            if ($action == 'refreshmenu')
-            {
-                $this->success('', null, ['menulist' => $menulist]);
-            }
+        $w = [];
+        $keyword = request()->get('keyword');
+        if ($keyword != null) $w[] = ['m.username|m.mobile|m.wx_id', 'like', '%' . $keyword . '%'];
+        if (in_array(12, $this->auth->getGroupIds())) { // 业务员
+            $w[] = ['a.id', '=', session('admin')['id']];
         }
-        $this->view->assign('menulist', $menulist);
-        $this->view->assign('title', __('Home'));
+        $list = (new MerchantM)
+            ->alias('m')
+            ->where($w)
+            ->field('m.*, a.nickname')
+            ->join('admin a', 'a.id=m.s_id', 'left')
+            ->paginate($this->cur_limit, false, ['query' => $this->request->get()]);
+        $this->view->assign('list', $list);
         return $this->view->fetch();
     }
 
@@ -114,19 +109,5 @@ class Index extends Backend
     {
         $this->auth->logout();
         return $this->redirect('index/login');
-    }
-
-    /**
-     * 获取邀请商家注册链接
-     */
-    public function get_invite_link()
-    {
-        $s_id = session('admin')['id'];
-        $username = session('admin')['username'];
-        $sign = authcode($username . '|' . $s_id, 'ENCODE', '', 3600*24);
-        $url = 'http://' . config('url_prefix_merchant') . '.' . config('url_domain_root') . '/index/invite_merchant_view?sign=' . urlencode($sign);
-
-        $this->result['data'] = $url;
-        return $this->result($this->result, 0, '', 'json');
     }
 }

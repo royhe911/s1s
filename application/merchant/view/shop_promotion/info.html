@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<title>活动详情</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <script>
+        (function(doc, win) {
+            var docEl = doc.documentElement,
+                    resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+                    recalc = function() {
+                        var clientWidth = docEl.clientWidth;
+                        if (!clientWidth) return;
+                        docEl.style.fontSize = 100 * (clientWidth / 750) + 'px';
+                    };
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+    </script>
+    <style>
+        *:before,
+        *:after {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        .row:after,
+        .container:after {
+            display: table;
+            content: '';
+            clear: both;
+        }
+        .row:before,
+        .container:before {
+            display: table;
+            content: '';
+        }
+        .container {
+            margin: 0 auto;
+            vertical-align: top;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #news img {
+            max-width: 100%;
+            vertical-align: top;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container" id="news">
+    <img src="http://u-img.qxungo.com/{$article_info.content}">
+</div>
+</body>
+</html>

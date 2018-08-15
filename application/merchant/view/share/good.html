@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <title>商品详情</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/share/reset.css">
+    <link rel="stylesheet" href="/assets/css/share/shop.css">
+    <link rel="stylesheet" href="/assets/css/share/good.css">
+    <script src="/assets/js/share/rem.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="/assets/img/logo.png" alt="">
+            <a href="https://{$Think.config.url_prefix_www ?? ''}.{$Think.config.url_domain_root}/app_download/">
+                下载APP
+            </a>
+        </div>
+        <div class="shop-info">
+            <div class="center image">
+                <img src="{$Think.config.qiniu.domain ?? ''}{$data.preview_image}" alt="">
+            </div>
+            <div class="info">
+                <div class="name">
+                    <div>
+                        <p>{$data.title}</p>
+                    </div>
+                    <p>   <?php if ($data['price'] > 0){?>
+                        <b>￥</b><b>{$data.price}</b>
+                        <?php }else{?>
+                        <b>价格到店咨询</b>
+                        <?php }?></p>
+                </div>
+                <!--
+                <div class="address">                  
+                    <div class="address-l">
+                        <p></p>
+                        <img src="/assets/img/位置.png" alt="">
+                    </div>
+                    <div class="address-r center">
+                        <img src="/assets/img/dpxq_dh.png" alt="">
+                    </div>
+                </div>
+                -->
+            </div>
+        </div>
+        <div class="introduce">
+            <h3 class="title-com">
+                <div class="title-l">
+                    <img src="/assets/img/dpxq_fg.png" alt="">
+                    <p>商品详情</p>
+                </div>
+            </h3>
+            <div class="detail">
+                <div class="detail-line">
+                
+                    <?php foreach($data['good_detail_images'] as $key => $value_img){?>
+                    <div class="detail-img center">
+                        <img src="{$Think.config.qiniu.domain ?? ''}{$value_img['detail_image']}" alt="">
+                    </div>
+                    <?php }?>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="/assets/js/share/scroll.js"></script>
+</html>

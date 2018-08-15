@@ -14,8 +14,8 @@ return [
         '' => 'index',
         \think\facade\Config::get('url_prefix_www') => 'index',
         \think\facade\Config::get('url_prefix_api') => 'api',
-        \think\facade\Config::get('url_prefix_admin')  => 'admin',
-        \think\facade\Config::get('url_prefix_bapi')  => 'bapi',
+        \think\facade\Config::get('url_prefix_admin') => 'admin',
+        \think\facade\Config::get('url_prefix_merchant') => 'merchant',
         ],
     '__pattern__' => [
         'name' => '\w+',
