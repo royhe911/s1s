@@ -3,15 +3,15 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => '127.0.0.1,127.0.0.1',
+    'hostname'        => 'sh-cdb-7owrztwe.sql.tencentcdb.com,sh-cdb-7owrztwe.sql.tencentcdb.com',
     // 数据库名
     'database'        => 's1s_new',
     // 用户名
     'username'        => 'root,root',
     // 密码
-    'password'        => ',',
+    'password'        => 'Maoke#170310,Maoke#170310',
     // 端口
-    'hostport'        => '',
+    'hostport'        => '63665',
     // 连接dsn
     'dsn'             => '',
     // 数据库连接参数
