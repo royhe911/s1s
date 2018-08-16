@@ -20,3 +20,16 @@ CREATE TABLE `s1s_merchant` (
   `updatetime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='商户表';
+
+CREATE TABLE `s1s_shop` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `m_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '商家id',
+  `shop_name` varchar(100) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '店铺名称',
+  `url` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '店铺链接',
+  `wangwang` varchar(100) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '店铺旺旺',
+  `status` tinyint(4) NOT NULL COMMENT '店铺状态 1-启用 2-禁用 3-审核未通过',
+  `reject` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '驳回原因',
+  `addtime` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `reviewtime` int(11) NOT NULL DEFAULT '0' COMMENT '审核通过时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商户店铺表';

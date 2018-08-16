@@ -1,5 +1,3 @@
-<script type="text/javascript" src="__CDN__/assets/libs/laydate5/laydate.js"></script>
-<script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
 <div class="panel panel-default panel-intro">
     <div class="panel-heading row" style="padding-top:0;color: #999;font-size: 12px; line-height: 50px; background-color: transparent">
         <div style="background-color: #e8edf0;width: 100%; height: 50px;padding-left: 15px">
@@ -26,25 +24,6 @@
                                     </div>
                                 </div>
                             </form>
-                            <div class="row" style="margin:0;">
-                                <div class="bs-bars pull-left" style="width: 100%;margin-bottom: 0">
-                                    <div id="toolbar" class="toolbar pull-left" style="position: relative;">
-                                        <a href="/merchant/add" class="btn btn-success bs-bars-com btn-add" title="添加"> 添加</a>
-                                        <a href="javascript:;" data-isStop="1" data-id="0" class="ac-is-stop btn btn-success bs-bars-com btn-status-enable btn-disabled disabled"
-                                            title="上架" style="background-color: #37c6c0;"> 批量启用</a>
-                                        <a href="javascript:;" data-isStop="0" data-id="0" class="ac-is-stop btn btn-success bs-bars-com btn-status-disable btn-disabled disabled"
-                                            title="下架" style="background-color: #79baf3;"> 禁用</a>                                        
-                                    </div>
-                                    <div class="num pull-right" style="margin-top:10px;">
-		                            	<select class="pull-left form-control title-input num_list" style="width:120px;border-color:#34C191;">
-		                                	<option value="0">查看条数</option>
-		                                	{volist name='page_list' id='vo'}
-		                                	<option value="{$vo}" {if $Think.session.cur_limit eq $vo}selected{/if}>{$vo}</option>
-		                                	{/volist}
-		                                </select>
-		                            </div> 
-                                </div>                                
-                            </div>
                             <div style="height:40px;">
                             	<p style="float: right;font-size: 12px;line-height:40px; margin: 0">共计<span style="color: #34c191;">{$list->total()}</span> 个商户</p>                                            
                             </div>
@@ -130,18 +109,22 @@
                                                 {/if}
                                             </td>
                                             <td style="text-align: center; vertical-align: middle; ">
-                                                <!-- <a href="/merchant/edit/ids/{$vo.id}" class="albumCC btn-editone" title="编辑" data-table-id="table" data-field-index="9" data-row-index="0"
-                                                    data-button-index="0">
-                                                    <i class="iconfont icon-edit"></i>
-                                                </a> -->
-                                                <a href="javascript:;" data-Id="{$vo.id}" class="<?php echo ($vo['status'] == 1) ? 'editClick': 'btn-s';?> btn-editone btn-color editCC"
-                                                    title="编辑" data-table-id="table" data-field-index="9" data-row-index="0" data-button-index="0">
-                                                    <i class="iconfont icon-edit"></i>
+                                                {if $vo.status eq 3}
+                                                <a href="javascript:;" data-Id="{$vo.id}" class="btn-editone btn-color editCC"
+                                                    title="激活账号" onclick="edit_status({$vo.id}, 1);" data-table-id="table" data-field-index="9" data-row-index="0" data-button-index="0">
+                                                    激活账号
                                                 </a>
-                                                <a href="javascript:;" onclick="del({$vo.id});" class="albumCC btn-delone" title="删除" data-table-id="table" data-field-index="9"
-                                                    data-row-index="30" data-button-index="2">
-                                                    <i class="iconfont icon-shanchu"></i>
+                                                {elseif $vo.status eq 2}
+                                                <a href="javascript:;" data-Id="{$vo.id}" class="btn-editone btn-color editCC"
+                                                   title="解冻账号" onclick="edit_status({$vo.id}, 1);" data-table-id="table" data-field-index="9" data-row-index="0" data-button-index="0">
+                                                    解冻账号
                                                 </a>
+                                                {else $vo.status eq 1}
+                                                <a href="javascript:;" data-Id="{$vo.id}" class="btn-editone btn-color editCC"
+                                                   title="冻结账号" onclick="edit_status({$vo.id}, 2);" data-table-id="table" data-field-index="9" data-row-index="0" data-button-index="0">
+                                                    冻结账号
+                                                </a>
+                                                {/if}
                                             </td>
                                         </tr>
                                         {/volist}
@@ -169,70 +152,23 @@
     	$('#btSelectAll').attr('disabled',false)
     	//切换显示条数
 		$('.num_list').change(function(){
-	    	var value=$(this).find('option:selected').val();
-	    	var keyword=$('input[name="keyword"]').val();   	
-	    	var status=$('select[name="status"]').find('option:selected').val();
-	    	var from_time=$('input[name="from_time"]').val();
-	    	location.href = '/merchant/index?cur_limit=' + value+'&keyword='+keyword+'&status='+status+'&from_time='+from_time;        	    
+	    	var value = $(this).find('option:selected').val();
+	    	var keyword=$('input[name="keyword"]').val();
+	    	location.href = '/merchant/merchant/index?cur_limit=' + value+'&keyword='+keyword;
 	    })
-    	
-        var prevent_more_click = true;
-        $(".ac-is-stop").on("click", function () {
-            if(prevent_more_click) {
-                var obj = {
-                    url: '/merchant/edit_status',
-                    info_msg: '请选择要操作的商户',
-                    show_stop: "禁用",
-                    show_start: "启用"
-                };
-                obj.os_this = $(this);
-                obj.is_stop = $(this).attr("data-isStop");
-                obj.id = $(this).attr("data-id");
-                is_stop(obj);
-                prevent_more_click = false;
-                if (obj.is_stop == 1) {
-                    obj.os_this.parent().next().children('.btn-editone').removeClass('btn-s').addClass('editClick')
-                } else {
-                    obj.os_this.parent().next().children('.btn-editone').removeClass('editClick').addClass('btn-s')
-                    // $('this').css('backgroundColor', '#34c191')
-                }
-                setTimeout(function () {
-                    prevent_more_click = true;
-                }, 600);
-            }
-        });
     })();
-    $(document).on('click', '.btn-s', function () {
-        // layer_open('编辑', '/merchant/edit/ids/' + $(this).attr('data-Id'), { w: '580px', h: '700px' })
-        window.location.href = '/merchant/edit/ids/' + $(this).attr('data-Id')
-    })
-    function del(ids) {
-        if (ids == 0) {
-            ids = get_select_all();
-        }
-        if (ids == '') {
-            layer.msg('请选择要操作的城市合伙人');
-            return false;
-        }
-        $.post('/merchant/delete', { ids: ids }, function (data) {
-            if (data.code == 1) {
-                layer.msg(data.msg, {
+
+    function edit_status(id, status) {
+        $.post('/merchant/merchant/edit_status', { id: id, status: status }, function (data) {
+            if (data.data.code == 1) {
+                layer.msg(data.data.msg, {
                     time: 2000 //2秒关闭（如果不配置，默认是3秒）
                 }, function () {
-                    window.parent.location.reload();
+                    window.location.reload();
                 });
             } else {
                 layer.msg(data.msg);
             }
         }, 'json')
     }
-    /**
-     * 加载时间插件
-     */
-    laydate.render({
-        elem: '#fromTime'
-        ,range: true
-        ,value: "{$Request.get.from_time ?? ''}"
-    });
-    
 </script>
