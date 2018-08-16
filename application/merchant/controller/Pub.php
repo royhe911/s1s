@@ -69,7 +69,7 @@ class Pub extends Controller
     }
 
     /**
-     * 商户激活注册登录
+     * 商户激活注册
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
