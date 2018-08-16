@@ -7,8 +7,10 @@ use app\common\model\Merchant;
 use fast\Random;
 use think\Controller;
 use think\Exception;
+use think\exception\HttpResponseException;
 use think\facade\Log;
 use think\facade\Request;
+use think\facade\Response;
 use think\facade\Session;
 
 class Pub extends Controller
@@ -17,7 +19,12 @@ class Pub extends Controller
 
     protected $default_limit1 = 24;
 
+    protected $merchant_info = [];
+
     protected $result = ['code' => "1", 'msg' => '操作成功', 'data' => null];
+
+    //不需要登陆
+    protected $not_login = ['invite_merchant', 'get_login_sms', 'get_token', 'login', 'other_login'];
 
     public function __construct()
     {
@@ -39,6 +46,25 @@ class Pub extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
             exit();
+        }
+        $this->initialize();
+    }
+
+    /**
+     * 权限验证
+     * @throws \think\exception\HttpResponseException
+     */
+    protected function initialize()
+    {
+        $action_name = Request::instance()->action();
+        if (!in_array($action_name, $this->not_login)) {
+            $this->merchant_info = $this->checkLogin();
+            if ($this->merchant_info == false) {
+                $this->result['code'] = '20000';
+                $this->result['msg'] = lang($this->result['code']);
+                $response = Response::create($this->result, 'json', 200)->header([]);
+                throw new HttpResponseException($response);
+            }
         }
     }
 

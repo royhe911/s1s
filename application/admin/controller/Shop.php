@@ -1,25 +1,21 @@
 <?php
-namespace app\admin\controller\merchant;
 
-use think\facade\Config;
-use think\facade\Hook;
-use think\Validate;
+namespace app\admin\controller;
 
-use app\admin\model\AdminLog;
-use app\common\model\Merchant as MerchantM;
+use app\common\model\Shop as ShopM;
 use app\common\controller\Backend;
 
 /**
- * 后台首页
+ * 店铺管理
  * @internal
  */
-class Merchant extends Backend
+class Shop extends Backend
 {
     protected $relationSearch = true;
     protected $layout = 'default2';
 
     /**
-     * 后台首页
+     * 店铺列表
      */
     public function index()
     {
@@ -27,13 +23,13 @@ class Merchant extends Backend
         $keyword = request()->get('keyword');
         if ($keyword != null) $w[] = ['m.username|m.mobile|m.wx_id', 'like', '%' . $keyword . '%'];
         if (in_array(12, $this->auth->getGroupIds())) { // 业务员
-            $w[] = ['a.id', '=', session('admin')['id']];
+            $w[] = ['m.s_id', '=', session('admin')['id']];
         }
-        $list = (new MerchantM)
-            ->alias('m')
+        $list = (new ShopM())
+            ->alias('s')
             ->where($w)
-            ->field('m.*, a.nickname')
-            ->join('admin a', 'a.id=m.s_id', 'left')
+            ->field('s.*, m.nickname')
+            ->join('merchant m', 'm.id=s.m_id')
             ->paginate($this->cur_limit, false, ['query' => $this->request->get()]);
         $this->view->assign('list', $list);
         return $this->view->fetch();
@@ -54,9 +50,9 @@ class Merchant extends Backend
         }
 
         if ($status == 1) {
-            MerchantM::where('id', $id)->setField('status', $status);
+            ShopM::where('id', $id)->setField('status', $status);
         } else {
-            MerchantM::where('id', $id)->setField('status', $status);
+            ShopM::where('id', $id)->setField('status', $status);
             // TODO 代写冻结账号的相关操作。
         }
         return $this->result($this->result, 0, '', 'json');

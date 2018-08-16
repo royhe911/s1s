@@ -9,12 +9,9 @@ use think\Controller;
 use think\facade\Config;
 
 use app\admin\library\Auth;
-use app\admin\model\AdminRegion;
 use app\admin\model\AuthGroup;
 use app\admin\model\AuthGroupAccess;
 use app\admin\model\AuthRule;
-use app\common\model\feigo\Regions;
-use app\common\model\feigo\Config as ConfigM;
 
 /**
  * 后台控制器基类
@@ -99,12 +96,6 @@ class Backend extends Controller
      * 表示注释或字段名
      */
     protected $importHeadType = 'comment';
-
-
-    protected $city_id = '';
-
-
-    protected $city_list = [];
 
     /**
      * 引入后台控制器的traits

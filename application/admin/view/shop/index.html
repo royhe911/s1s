@@ -5,7 +5,7 @@
                 <i class="fa fa-home" style="font-size: 14px;"></i>
             </div>
             <div class="panel-lead lf" style="margin: 0px;">商户管理&nbsp;&nbsp;&nbsp;> </div>
-            <div class="panel-lead lf pl" style="margin: 0px;color: #34c191;">&nbsp;&nbsp;&nbsp;商户列表 </div>
+            <div class="panel-lead lf pl" style="margin: 0px;color: #34c191;">&nbsp;&nbsp;&nbsp;店铺列表 </div>
         </div>
     </div>
     <div class="panel-body">
@@ -17,7 +17,7 @@
                             <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="get" action="">
                                 <div class="row" style="margin:0;">
                                     <div style="float: left;width: 150px;margin-right: 10px;">
-                                        <input class="form-control title-input" style="width: 250px;" name="keyword" type="text" value="{$Request.get.keyword ?? ''}" placeholder="商家名称/手机号/微信号">
+                                        <input class="form-control title-input" style="width: 250px;" name="keyword" type="text" value="{$Request.get.keyword ?? ''}" placeholder="商家名称/店铺名称">
                                     </div>
                                     <div style="float: left;width: 100px;background-color: #34c191;" class="br">
                                         <button type="submit" class="btn btn-success btn-ok btn-embossed title-input br" style="width: 100%; background-color: #34c191;">搜 索</button>
@@ -25,7 +25,7 @@
                                 </div>
                             </form>
                             <div style="height:40px;">
-                            	<p style="float: right;font-size: 12px;line-height:40px; margin: 0">共计<span style="color: #34c191;">{$list->total()}</span> 个商户</p>                                            
+                            	<p style="float: right;font-size: 12px;line-height:40px; margin: 0">共计<span style="color: #34c191;">{$list->total()}</span> 个店铺</p>
                             </div>
                         </div>
                         <div class="fixed-table-container" style="padding-bottom: 0px;">
@@ -48,31 +48,19 @@
                                                 <div class="fht-cell"></div>
                                             </th>
                                             <th style="text-align: center; vertical-align: middle; " data-field="">
-                                                <div class="th-inner ">商户名称</div>
+                                                <div class="th-inner ">店铺名称</div>
                                                 <div class="fht-cell"></div>
                                             </th>
                                             <th style="text-align: center; vertical-align: middle; " data-field="">
-                                                <div class="th-inner ">手机</div>
+                                                <div class="th-inner ">旺旺</div>
                                                 <div class="fht-cell"></div>
                                             </th>
                                             <th style="text-align: center; vertical-align: middle; " data-field="">
-                                                <div class="th-inner ">微信</div>
+                                                <div class="th-inner ">商家名称</div>
                                                 <div class="fht-cell"></div>
                                             </th>
                                             <th style="text-align: center; vertical-align: middle; " data-field="">
-                                                <div class="th-inner ">加入时间</div>
-                                                <div class="fht-cell"></div>
-                                            </th>
-                                            <th style="text-align: center; vertical-align: middle; " data-field="">
-                                                <div class="th-inner ">余额</div>
-                                                <div class="fht-cell"></div>
-                                            </th>
-                                            <th style="text-align: center; vertical-align: middle; " data-field="">
-                                                <div class="th-inner ">冻结金额</div>
-                                                <div class="fht-cell"></div>
-                                            </th>
-                                            <th style="text-align: center; vertical-align: middle; " data-field="">
-                                                <div class="th-inner ">业务员</div>
+                                                <div class="th-inner ">店铺网址</div>
                                                 <div class="fht-cell"></div>
                                             </th>
                                             <th style="text-align: center; vertical-align: middle; " data-field="">
@@ -92,39 +80,26 @@
                                                 <input data-index="{$i-1}" value="{$vo.id}" name="btSelectItem" type="checkbox">
                                             </td>
                                             <td style="text-align: center; vertical-align: middle; ">{$vo.id}</td>
-                                            <td style="text-align: center; vertical-align: middle; ">{$vo.username}</td>
-                                            <td style="text-align: center; vertical-align: middle; ">{$vo.mobile}</td>
-                                            <td style="text-align: center; vertical-align: middle; ">{$vo.wx_id}</td>
-                                            <td style="text-align: center; vertical-align: middle; ">{$vo.addtime|date='Y-m-d H:i'}</td>
-                                            <td style="text-align: center; vertical-align: middle; ">{$vo.balance_amount}</td>
-                                            <td style="text-align: center; vertical-align: middle; ">{$vo.frozen_amount}</td>
+                                            <td style="text-align: center; vertical-align: middle; ">{$vo.shop_name}</td>
+                                            <td style="text-align: center; vertical-align: middle; ">{$vo.wangwang}</td>
                                             <td style="text-align: center; vertical-align: middle; ">{$vo.nickname}</td>
+                                            <td style="text-align: center; vertical-align: middle; "><a target="_blank" href="{$vo.url}">点击查看</a></td>
                                             <td style="text-align: center; vertical-align: middle; ">
                                                 {if $vo.status eq 1}
                                                 正常
                                                 {elseif $vo.status eq 2}
                                                 禁用
-                                                {else}
-                                                审核未通过
+                                                {elseif $vo.status eq 3}
+                                                待审核
+                                                {elseif $vo.status eq 4}
+                                                已拒绝
                                                 {/if}
                                             </td>
                                             <td style="text-align: center; vertical-align: middle; ">
-                                                {if $vo.status eq 3}
                                                 <a href="javascript:;" data-Id="{$vo.id}" class="btn-editone btn-color editCC"
-                                                    title="激活账号" onclick="edit_status({$vo.id}, 1);" data-table-id="table" data-field-index="9" data-row-index="0" data-button-index="0">
-                                                    激活账号
+                                                    title="审核" onclick="check_shop({$vo.id});" data-table-id="table" data-field-index="9" data-row-index="0" data-button-index="0">
+                                                    审核
                                                 </a>
-                                                {elseif $vo.status eq 2}
-                                                <a href="javascript:;" data-Id="{$vo.id}" class="btn-editone btn-color editCC"
-                                                   title="解冻账号" onclick="edit_status({$vo.id}, 1);" data-table-id="table" data-field-index="9" data-row-index="0" data-button-index="0">
-                                                    解冻账号
-                                                </a>
-                                                {else $vo.status eq 1}
-                                                <a href="javascript:;" data-Id="{$vo.id}" class="btn-editone btn-color editCC"
-                                                   title="冻结账号" onclick="edit_status({$vo.id}, 2);" data-table-id="table" data-field-index="9" data-row-index="0" data-button-index="0">
-                                                    冻结账号
-                                                </a>
-                                                {/if}
                                             </td>
                                         </tr>
                                         {/volist}
@@ -158,8 +133,22 @@
 	    })
     })();
 
+    function check_shop(id) {
+        layer.msg('店铺审核', {
+            icon: 2
+            ,shadeClose: false
+            ,btn: ['通过', '不通过', '取消']
+            ,btn1: function(index) {
+                edit_status(id, 1)
+            }
+            ,btn2: function (index) {
+                edit_status(id, 4)
+            }
+        });
+    }
+
     function edit_status(id, status) {
-        $.post('/merchant/merchant/edit_status', { id: id, status: status }, function (data) {
+        $.post('/shop/edit_status', { id: id, status: status }, function (data) {
             if (data.data.code == 1) {
                 layer.msg(data.data.msg, {
                     time: 2000 //2秒关闭（如果不配置，默认是3秒）

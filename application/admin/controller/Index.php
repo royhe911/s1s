@@ -1,4 +1,5 @@
 <?php
+
 namespace app\admin\controller;
 
 use think\facade\Config;
@@ -27,15 +28,13 @@ class Index extends Backend
         //左侧菜单
         $menulist = $this->auth->getSidebar([
             'dashboard' => 'hot',
-            'addon'     => ['new', 'red', 'badge'],
+            'addon' => ['new', 'red', 'badge'],
             'auth/rule' => __('Menu'),
-            'general'   => ['new', 'purple'],
+            'general' => ['new', 'purple'],
         ], $this->view->site['fixedpage']);
         $action = $this->request->request('action');
-        if ($this->request->isPost())
-        {
-            if ($action == 'refreshmenu')
-            {
+        if ($this->request->isPost()) {
+            if ($action == 'refreshmenu') {
                 $this->success('', null, ['menulist' => $menulist]);
             }
         }
@@ -50,45 +49,38 @@ class Index extends Backend
     public function login()
     {
         $url = $this->request->get('url', 'index/index');
-        if ($this->auth->isLogin())
-        {
+        if ($this->auth->isLogin()) {
             return $this->redirect($url);
         }
-        if ($this->request->isPost())
-        {
+        if ($this->request->isPost()) {
             $username = $this->request->post('username');
             $password = $this->request->post('password');
             $keeplogin = $this->request->post('keeplogin');
             //$token = $this->request->post('__token__');
             $rule = [
-                'username'  => 'require|length:3,30',
-                'password'  => 'require|length:3,30',
+                'username' => 'require|length:3,30',
+                'password' => 'require|length:3,30',
                 //'__token__' => 'token',
             ];
             $data = [
-                'username'  => $username,
-                'password'  => $password,
+                'username' => $username,
+                'password' => $password,
                 //'__token__' => $token,
             ];
-            if (Config::get('fastadmin.login_captcha'))
-            {
+            if (Config::get('fastadmin.login_captcha')) {
                 $rule['captcha'] = 'require|captcha';
                 $data['captcha'] = $this->request->post('captcha');
             }
             $validate = new Validate($rule, [], ['username' => __('Username'), 'password' => __('Password'), 'captcha' => __('Captcha')]);
             $result = $validate->check($data);
-            if (!$result)
-            {
+            if (!$result) {
                 return $this->result(null, 0, $validate->getError(), 'json');
             }
             AdminLog::setTitle(__('Login'));
             $result = $this->auth->login($username, $password, $keeplogin ? 86400 : 0);
-            if ($result === true)
-            {
+            if ($result === true) {
                 return $this->result(['url' => $url], 1, '登录成功', 'json');
-            }
-            else
-            {
+            } else {
                 $msg = $this->auth->getError();
                 $msg = $msg ? $msg : '账号或密码输入有误';
                 return $this->result(null, 0, $msg, 'json');
@@ -96,8 +88,7 @@ class Index extends Backend
         }
 
         // 根据客户端的cookie,判断是否可以自动登录
-        if ($this->auth->autologin())
-        {
+        if ($this->auth->autologin()) {
             $this->redirect($url);
         }
         $background = cdnurl(Config::get('fastadmin.login_background'));
@@ -123,7 +114,7 @@ class Index extends Backend
     {
         $s_id = session('admin')['id'];
         $username = session('admin')['username'];
-        $sign = authcode($username . '|' . $s_id, 'ENCODE', '', 3600*24);
+        $sign = authcode($username . '|' . $s_id, 'ENCODE', '', 3600 * 24);
         $url = 'http://' . config('url_prefix_merchant') . '.' . config('url_domain_root') . '/index/invite_merchant_view?sign=' . urlencode($sign);
 
         $this->result['data'] = $url;
