@@ -14,6 +14,10 @@ class Shop extends Pub
 
     }
 
+    /**
+     * 添加店铺
+     * @return array
+     */
     public function add_shop()
     {
         $shop_name = request()->post('shop_name');

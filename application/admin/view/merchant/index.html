@@ -104,27 +104,17 @@
                                                 正常
                                                 {elseif $vo.status eq 2}
                                                 禁用
-                                                {else}
-                                                审核未通过
+                                                {elseif $vo.status eq 3}
+                                                待审核
+                                                {elseif $vo.status eq 4}
+                                                已拒绝
                                                 {/if}
                                             </td>
                                             <td style="text-align: center; vertical-align: middle; ">
-                                                {if $vo.status eq 3}
                                                 <a href="javascript:;" data-Id="{$vo.id}" class="btn-editone btn-color editCC"
-                                                    title="激活账号" onclick="edit_status({$vo.id}, 1);" data-table-id="table" data-field-index="9" data-row-index="0" data-button-index="0">
-                                                    激活账号
+                                                   title="审核" onclick="check_merchant({$vo.id});" data-table-id="table" data-field-index="9" data-row-index="0" data-button-index="0">
+                                                    审核
                                                 </a>
-                                                {elseif $vo.status eq 2}
-                                                <a href="javascript:;" data-Id="{$vo.id}" class="btn-editone btn-color editCC"
-                                                   title="解冻账号" onclick="edit_status({$vo.id}, 1);" data-table-id="table" data-field-index="9" data-row-index="0" data-button-index="0">
-                                                    解冻账号
-                                                </a>
-                                                {else $vo.status eq 1}
-                                                <a href="javascript:;" data-Id="{$vo.id}" class="btn-editone btn-color editCC"
-                                                   title="冻结账号" onclick="edit_status({$vo.id}, 2);" data-table-id="table" data-field-index="9" data-row-index="0" data-button-index="0">
-                                                    冻结账号
-                                                </a>
-                                                {/if}
                                             </td>
                                         </tr>
                                         {/volist}
@@ -157,6 +147,20 @@
 	    	location.href = '/merchant/index?cur_limit=' + value+'&keyword='+keyword;
 	    })
     })();
+
+    function check_merchant(id) {
+        layer.msg('店铺审核', {
+            icon: 2
+            ,shadeClose: false
+            ,btn: ['通过', '不通过', '取消']
+            ,btn1: function(index) {
+                edit_status(id, 1)
+            }
+            ,btn2: function (index) {
+                edit_status(id, 4)
+            }
+        });
+    }
 
     function edit_status(id, status) {
         $.post('/merchant/edit_status', { id: id, status: status }, function (data) {

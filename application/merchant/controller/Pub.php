@@ -116,7 +116,6 @@ class Pub extends Controller
             's_id' => $s_id,
             'open_id' => $open_id,
             'wx_id' => $wx_id,
-            'overdraft_amount' => '500.00',
             'nickname' => $nickname,
             'addtime' => time(),
             'updatetime' => time(),
