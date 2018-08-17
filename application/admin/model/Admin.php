@@ -36,4 +36,27 @@ class Admin extends Model
         return $encrypt($password . $salt);
     }
 
+    /**
+     * 返回n级html<select></select>中option包含选中
+     * @param int $pid
+     * @param int $select_id
+     * @param bool $is_show_all
+     * @param bool $re_type
+     * @param int $level
+     * @param null $tree_all
+     * @return null|string
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public static function getRoleListHtml($data, $select_id = 0, $level = 0)
+    {
+        $html = '';
+        foreach ($data as $value) {
+            $text = str_repeat('&nbsp;', $level * 4) . $value['name'];
+            $html .= sprintf('<option %s value="%s">%s</option>', $select_id == $value['id'] ? 'selected': '', $value['id'], $text);
+            if (isset($value['childlist'])) $html .= self::getRoleListHtml($value['childlist'], $select_id, $level + 1);
+        }
+        return $html;
+    }
 }

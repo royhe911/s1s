@@ -3,10 +3,13 @@
 namespace app\admin\controller\auth;
 
 use app\admin\model\AuthGroup;
+use app\admin\model\Admin as AdminM;
 use app\admin\model\AuthGroupAccess;
 use app\common\controller\Backend;
 use fast\Random;
 use fast\Tree;
+use think\Db;
+use think\Exception;
 
 /**
  * 管理员管理
@@ -20,6 +23,8 @@ class Admin extends Backend
     protected $model = null;
     protected $childrenGroupIds = [];
     protected $childrenAdminIds = [];
+    protected $relationSearch = true;
+    protected $layout = 'default2';
 
     public function initialize()
     {
@@ -32,33 +37,6 @@ class Admin extends Backend
         $groupList = AuthGroup::where('id', 'in', $this->childrenGroupIds)->select()->toArray();
 
         Tree::instance()->init($groupList);
-        $groupdata = [];
-        if ($this->auth->isSuperAdmin())
-        {
-            $result = Tree::instance()->getTreeList(Tree::instance()->getTreeArray(0));
-            foreach ($result as $k => $v)
-            {
-                $groupdata[$v['id']] = $v['name'];
-            }
-        }
-        else
-        {
-            $result = [];
-            $groups = $this->auth->getGroups();
-            foreach ($groups as $m => $n)
-            {
-                $childlist = Tree::instance()->getTreeList(Tree::instance()->getTreeArray($n['id']));
-                $temp = [];
-                foreach ($childlist as $k => $v)
-                {
-                    $temp[$v['id']] = $v['name'];
-                }
-                $result[__($n['name'])] = $temp;
-            }
-            $groupdata = $result;
-        }
-
-        $this->view->assign('groupdata', $groupdata);
         $this->assignconfig("admin", ['id' => $this->auth->id]);
     }
 
@@ -67,56 +45,15 @@ class Admin extends Backend
      */
     public function index()
     {
-        if ($this->request->isAjax())
-        {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('pkey_name'))
-            {
-                return $this->selectpage();
-            }
-            $childrenGroupIds = $this->childrenGroupIds;
-            $groupName = AuthGroup::where('id', 'in', $childrenGroupIds)
-                    ->column('id,name');
-            $authGroupList = AuthGroupAccess::where('group_id', 'in', $childrenGroupIds)
-                    ->field('uid,group_id')
-                    ->select();
+        $w[] = ['a.id', 'in', $this->childrenAdminIds];
 
-            $adminGroupName = [];
-            foreach ($authGroupList as $k => $v)
-            {
-                if (isset($groupName[$v['group_id']]))
-                    $adminGroupName[$v['uid']][$v['group_id']] = $groupName[$v['group_id']];
-            }
-            $groups = $this->auth->getGroups();
-            foreach ($groups as $m => $n)
-            {
-                $adminGroupName[$this->auth->id][$n['id']] = $n['name'];
-            }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            $total = $this->model
-                    ->where($where)
-                    ->where('id', 'in', $this->childrenAdminIds)
-                    ->order($sort, $order)
-                    ->count();
-
-            $list = $this->model
-                    ->where($where)
-                    ->where('id', 'in', $this->childrenAdminIds)
-                    ->field(['password', 'salt', 'token'], true)
-                    ->order($sort, $order)
-                    ->limit($offset, $limit)
-                    ->select();
-            foreach ($list as $k => &$v)
-            {
-                $groups = isset($adminGroupName[$v['id']]) ? $adminGroupName[$v['id']] : [];
-                $v['groups'] = implode(',', array_keys($groups));
-                $v['groups_text'] = implode(',', array_values($groups));
-            }
-            unset($v);
-            $result = array("total" => $total, "rows" => $list);
-
-            return json($result);
-        }
+        $list = (new AdminM)->alias('a')
+            ->where($w)
+            ->join('auth_group_access g', 'g.uid=a.id')
+            ->join('auth_group ag', 'ag.id=g.group_id')
+            ->field('a.id, a.username, a.nickname, ag.name, a.email, a.status')
+            ->paginate($this->cur_limit, false, ['query' => $this->request->get()]);
+        $this->view->assign('list', $list);
         return $this->view->fetch();
     }
 
@@ -125,34 +62,59 @@ class Admin extends Backend
      */
     public function add()
     {
-        if ($this->request->isPost())
-        {
-            $params = $this->request->post("row/a");
-            if ($params)
-            {
-                $params['salt'] = Random::alnum();
-                $params['password'] = md5(md5($params['password']) . $params['salt']);
-                $params['avatar'] = '/assets/img/avatar.png'; //设置新管理员默认头像。
-                $result = $this->model->validate('Admin.add')->save($params);
-                if ($result === false)
-                {
-                    $this->error($this->model->getError());
-                }
-                $group = $this->request->post("group/a");
-
-                //过滤不允许的组别,避免越权
-                $group = array_intersect($this->childrenGroupIds, $group);
-                $dataset = [];
-                foreach ($group as $value)
-                {
-                    $dataset[] = ['uid' => $this->model->id, 'group_id' => $value];
-                }
-                model('AuthGroupAccess')->saveAll($dataset);
-                $this->success();
+        if ($this->request->isPost()) {
+            $group_id = request()->post("group_id");
+            if (empty($group_id)) {
+                $this->error('角色有误');
             }
-            $this->error();
+            $data['nickname'] = request()->post('nickname');
+            $data['realname'] = request()->post('realname');
+            $data['mobile'] = request()->post('mobile');
+            $data['wx_id'] = request()->post('wx_id');
+            $data['qq_id'] = request()->post('qq_id');
+            if ($group_id == 13) { // 客服主管
+                $data['wx_nickname'] = request()->post('wx_nickname');
+                $data['bank_card'] = request()->post('bank_card');
+                $data['bank_name'] = request()->post('bank_name');
+            }
+            if ($group_id == 12) { // 业务员
+                $wx_image = request()->file('wx_image');
+                $info = $wx_image->move( 'uploads');
+            }
+
+            $pass = request()->post('pass');
+            $re_pass = request()->post('re_pass');
+            if ($pass != $re_pass) {
+                $this->error('密码不一致');
+            }
+            $data['salt'] = Random::alnum();
+            $data['password'] = md5(md5($pass) . $data['salt']);
+            $data['avatar'] = '/assets/img/avatar.png'; //设置新管理员默认头像。
+
+            $group = [$group_id];
+            // 过滤不允许的组别,避免越权
+            array_intersect($this->childrenGroupIds, $group);
+
+            Db::startTrans();
+            try {
+                $id = (new AdminM)->insertGetId($data);
+                $data = ['uid' => $id, 'group_id' => $group_id];
+                (new AuthGroupAccess())->insert($data);
+                Db::commit();
+                $this->success('操作成功');
+            } catch (Exception $e) {
+                Db::rollback();
+                $this->error($e->getMessage());
+            }
         }
-        return $this->view->fetch();
+        if ($this->auth->isSuperAdmin()) {
+            $groupdata = AdminM::getRoleListHtml(Tree::instance()->getTreeArray(0));
+        } else {
+            $groupdata = '<option  value="14">超级管理组</option>';
+        }
+
+        $this->view->assign('groupdata', $groupdata);
+        return $this->view->fetch('edit');
     }
 
     /**
@@ -163,61 +125,64 @@ class Admin extends Backend
         $row = $this->model->get(['id' => $ids]);
         if (!$row)
             $this->error(__('No Results were found'));
-        if ($this->request->isPost())
-        {
-            $params = $this->request->post("row/a");
-            if ($params)
-            {
-                if ($params['password'])
-                {
-                    $params['salt'] = Random::alnum();
-                    $params['password'] = md5(md5($params['password']) . $params['salt']);
-                }
-                else
-                {
-                    unset($params['password'], $params['salt']);
-                }
-                //这里需要针对username和email做唯一验证
-                $adminValidate = new \app\admin\validate\Admin();
-                $adminValidate->rule([
-                    'username' => 'require|max:50|unique:admin,username,' . $row->id,
-                    'email'    => 'require|email|unique:admin,email,' . $row->id
-                ]);
-                if (!$adminValidate->check($params)) {
-                    $this->error($adminValidate->getError());
-                }
-                $result = $row->save($params);
-                if ($result === false)
-                {
-                    $this->error($row->getError());
-                }
-
-                // 先移除所有权限
-                model('AuthGroupAccess')->where('uid', $row->id)->delete();
-
-                $group = $this->request->post("group/a");
-
-                // 过滤不允许的组别,避免越权
-                $group = array_intersect($this->childrenGroupIds, $group);
-
-                $dataset = [];
-                foreach ($group as $value)
-                {
-                    $dataset[] = ['uid' => $row->id, 'group_id' => $value];
-                }
-                model('AuthGroupAccess')->saveAll($dataset);
-                $this->success();
+        if ($this->request->isPost()) {
+            $group_id = request()->post("group_id");
+            if (empty($group_id)) {
+                $this->error('角色有误');
             }
-            $this->error();
+            $data['nickname'] = request()->post('nickname');
+            $data['realname'] = request()->post('realname');
+            $data['mobile'] = request()->post('mobile');
+            $data['wx_id'] = request()->post('wx_id');
+            $data['qq_id'] = request()->post('qq_id');
+            if ($group_id == 13) { // 客服主管
+                $data['wx_nickname'] = request()->post('wx_nickname');
+                $data['bank_card'] = request()->post('bank_card');
+                $data['bank_name'] = request()->post('bank_name');
+            } else {
+                $data['wx_nickname'] = $data['bank_card'] = $data['bank_name'] = '';
+            }
+            if ($group_id == 12) { // 业务员
+                $data['wx_image'] = request()->post('wx_image');
+            } else {
+                $data['wx_image'] = '';
+            }
+            $pass = request()->post('pass');
+            $re_pass = request()->post('re_pass');
+            if ($pass != $re_pass) {
+                $this->error('密码不一致');
+            }
+            $data['salt'] = Random::alnum();
+            $data['password'] = md5(md5($pass) . $data['salt']);
+
+            $group = [$group_id];
+            // 过滤不允许的组别,避免越权
+            array_intersect($this->childrenGroupIds, $group);
+
+            $auth_group_access_m = new AuthGroupAccess;
+            Db::startTrans();
+            try {
+                (new AdminM)->where('id', $ids)->update($data);
+                $data = ['uid' => $ids, 'group_id' => $group_id];
+
+                $auth_group_access_m->where('uid', $ids)->delete();
+                $auth_group_access_m->insert($data);
+                Db::commit();
+                $this->success('操作成功');
+            } catch (Exception $e) {
+                Db::rollback();
+                $this->error($e->getMessage());
+            }
         }
-        $grouplist = $this->auth->getGroups($row['id']);
-        $groupids = [];
-        foreach ($grouplist as $k => $v)
-        {
-            $groupids[] = $v['id'];
+        $row['group_id'] = AuthGroupAccess::where('uid', $row['id'])->value('group_id');
+        if ($this->auth->isSuperAdmin()) {
+            $groupdata = AdminM::getRoleListHtml(Tree::instance()->getTreeArray(0), $row['group_id']);
+        } else {
+            $groupdata = '<option  value="14">超级管理组</option>';
         }
+
+        $this->view->assign('groupdata', $groupdata);
         $this->view->assign("row", $row);
-        $this->view->assign("groupids", $groupids);
         return $this->view->fetch();
     }
 
@@ -226,23 +191,19 @@ class Admin extends Backend
      */
     public function del($ids = "")
     {
-        if ($ids)
-        {
+        if ($ids) {
             // 避免越权删除管理员
             $childrenGroupIds = $this->childrenGroupIds;
-            $adminList = $this->model->where('id', 'in', $ids)->where('id', 'in', function($query) use($childrenGroupIds) {
-                        $query->name('auth_group_access')->where('group_id', 'in', $childrenGroupIds)->field('uid');
-                    })->select();
-            if ($adminList)
-            {
+            $adminList = $this->model->where('id', 'in', $ids)->where('id', 'in', function ($query) use ($childrenGroupIds) {
+                $query->name('auth_group_access')->where('group_id', 'in', $childrenGroupIds)->field('uid');
+            })->select();
+            if ($adminList) {
                 $deleteIds = [];
-                foreach ($adminList as $k => $v)
-                {
+                foreach ($adminList as $k => $v) {
                     $deleteIds[] = $v->id;
                 }
                 $deleteIds = array_diff($deleteIds, [$this->auth->id]);
-                if ($deleteIds)
-                {
+                if ($deleteIds) {
                     $this->model->destroy($deleteIds);
                     model('AuthGroupAccess')->where('uid', 'in', $deleteIds)->delete();
                     $this->success();

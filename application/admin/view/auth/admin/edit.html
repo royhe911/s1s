@@ -1,51 +1,205 @@
-<form id="edit-form" class="form-horizontal form-ajax" role="form" data-toggle="validator" method="POST" action="">
-    <div class="form-group">
-        <label for="role_id" class="control-label col-xs-12 col-sm-2">{:__('Group')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            {:buildSelect('group[]', $groupdata, $groupids, ['class'=>'form-control selectpicker', 'multiple'=>'', 'data-rule'=>'required'])}
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="" style="height: 100vh;background-color: #fff;overflow: hidden;">
+    <input id="c-id" data-rule="required" class="form-control" name="" type="hidden" value="{$row.id ?? ''}">
+
+    <div class="form-group" style="padding:0 20px;padding-top: 20px; margin-left: 0">
+        <label class="control-label lf" style="width:80px ;display: block;line-height:31px;"> 角色:</label>
+        <div style="padding-left: 80px;height: 56px; ">
+            <select id="group_id" class="form-control op" style="display: inline-block;width: 300px;margin-right: 10px;">
+                {$groupdata|raw}
+            </select>
         </div>
     </div>
-    <div class="form-group">
-        <label for="username" class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input type="text" class="form-control" id="username" name="row[username]" value="{$row.username}" data-rule="required;username" />
+
+    <div class="form-group" style="padding:0 20px; margin-left: 0">
+        <label class="control-label lf" style="width:80px ;display: block;line-height:31px;">花名:</label>
+        <div style="padding-left: 80px;height: 56px; ">
+            <input id="nickname" maxlength="100" class="form-control ac-input" type="text" value="{$row.nickname ?? ''}" style=" width: 215px; height: 36px; border-radius: 4px; border: solid 1px #dddddd;">
         </div>
     </div>
-    <div class="form-group">
-        <label for="email" class="control-label col-xs-12 col-sm-2">{:__('Email')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input type="email" class="form-control" id="email" name="row[email]" value="{$row.email}" data-rule="required;email" />
+
+    <div class="form-group" style="padding:0 20px; margin-left: 0">
+        <label class="control-label lf" style="width:80px ;display: block;line-height:31px;">姓名:</label>
+        <div style="padding-left: 80px;height: 56px; ">
+            <input id="realname" maxlength="100" class="form-control ac-input" type="text" value="{$row.realname ?? ''}" style=" width: 215px; height: 36px; border-radius: 4px; border: solid 1px #dddddd;">
         </div>
     </div>
-    <div class="form-group">
-        <label for="nickname" class="control-label col-xs-12 col-sm-2">{:__('Nickname')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input type="text" class="form-control" id="nickname" name="row[nickname]" autocomplete="off" value="{$row.nickname}" data-rule="required" />
+
+    <div class="form-group" style="padding:0 20px; margin-left: 0">
+        <label class="control-label lf" style="width:80px ;display: block;line-height:31px;">手机:</label>
+        <div style="padding-left: 80px;height: 56px; ">
+            <input id="mobile" maxlength="100" class="form-control ac-input" type="text" value="{$row.mobile ?? ''}" style=" width: 215px; height: 36px; border-radius: 4px; border: solid 1px #dddddd;">
         </div>
     </div>
-    <div class="form-group">
-        <label for="password" class="control-label col-xs-12 col-sm-2">{:__('Password')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input type="password" class="form-control" id="password" name="row[password]" autocomplete="new-password" value="" data-rule="password" />
+
+    <div class="form-group" style="padding:0 20px; margin-left: 0">
+        <label class="control-label lf" style="width:80px ;display: block;line-height:31px;">初始密码:</label>
+        <div style="padding-left: 80px;height: 56px; ">
+            <input id="pass" maxlength="100" class="form-control ac-input" type="password" value="{$row.password ?? ''}" style=" width: 215px; height: 36px; border-radius: 4px; border: solid 1px #dddddd;">
         </div>
     </div>
-    <div class="form-group">
-        <label for="loginfailure" class="control-label col-xs-12 col-sm-2">{:__('Loginfailure')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input type="number" class="form-control" id="loginfailure" name="row[loginfailure]" value="{$row.loginfailure}" data-rule="required" />
+
+    <div class="form-group" style="padding:0 20px; margin-left: 0">
+        <label class="control-label lf" style="width:80px ;display: block;line-height:31px;">确认密码:</label>
+        <div style="padding-left: 80px;height: 56px; ">
+            <input id="re_pass" maxlength="100" class="form-control ac-input" type="password" value="{$row.password ?? ''}" style=" width: 215px; height: 36px; border-radius: 4px; border: solid 1px #dddddd;">
         </div>
     </div>
-    <div class="form-group">
-        <label for="content" class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            {:buildRadios('row[status]', ['1' => '启用', '0' => '禁用'], $row['status'])}
+
+    <div class="form-group" style="padding:0 20px; margin-left: 0">
+        <label class="control-label lf" style="width:80px ;display: block;line-height:31px;">微信号:</label>
+        <div style="padding-left: 80px;height: 56px; ">
+            <input id="wx_id" maxlength="100" class="form-control ac-input" type="text" value="{$row.wx_id ?? ''}" style=" width: 215px; height: 36px; border-radius: 4px; border: solid 1px #dddddd;">
         </div>
     </div>
-    <div class="form-group hidden layer-footer">
-        <label class="control-label col-xs-12 col-sm-2"></label>
-        <div class="col-xs-12 col-sm-8">
-            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
-            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+
+    <div id="wx_info" style="display: none">
+        <div class="form-group" style="padding:0 20px; margin-left: 0">
+            <label class="control-label lf" style="width:80px ;display: block;line-height:31px;">微信昵称:</label>
+            <div style="padding-left: 80px;height: 56px; ">
+                <input id="wx_nickname" maxlength="100" class="form-control ac-input" type="text" value="{$row.wx_nickname ?? ''}" style=" width: 215px; height: 36px; border-radius: 4px; border: solid 1px #dddddd;">
+            </div>
         </div>
+
+        <div class="form-group" style="padding:0 20px; margin-left: 0">
+            <label class="control-label lf" style="width:80px ;display: block;line-height:31px;">银行卡号:</label>
+            <div style="padding-left: 80px;height: 56px; ">
+                <input id="bank_card"  maxlength="100" class="form-control ac-input" type="text" value="{$row.bank_card ?? ''}" style=" width: 215px; height: 36px; border-radius: 4px; border: solid 1px #dddddd;">
+            </div>
+        </div>
+
+        <div class="form-group" style="padding:0 20px; margin-left: 0">
+            <label class="control-label lf" style="width:80px ;display: block;line-height:31px;">持卡人姓名:</label>
+            <div style="padding-left: 80px;height: 56px; ">
+                <input id="bank_name" maxlength="100" class="form-control ac-input" type="text" value="{$row.bank_name ?? ''}" style=" width: 215px; height: 36px; border-radius: 4px; border: solid 1px #dddddd;">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group" style="padding:0 20px; margin-left: 0">
+        <label class="control-label lf" style="width:80px ;display: block;line-height:31px;">QQ:</label>
+        <div style="padding-left: 80px;height: 56px; ">
+            <input id="qq_id" maxlength="100" class="form-control ac-input" type="text" value="{$row.qq_id ?? ''}" style=" width: 215px; height: 36px; border-radius: 4px; border: solid 1px #dddddd;">
+        </div>
+    </div>
+
+    <div class="form-group" style="padding:0 20px; margin-left: 0; display: none" id="wx_image">
+        <label class="control-label lf" style="width:80px ;display: block;line-height:31px;">微信号截图:</label>
+        <div style="padding-left: 80px;height: 56px; " data-name="image">
+            <input type="file" id="pic" style="display: none" accept="image/gif;image/jpg;" />
+            <div class="os-row">
+                <div class="formControls l ta-imgItem ac-add" style="width: 100px;height: 100px;">
+                    <img class="os-pointer" src="__CDN__/assets/img/defaultAdd1.png" id="wx_img" data-picture="0">
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="group_now" value="{$row.group_id ?? ''}">
+    <div class="form-group" style="text-align: center;" >
+        <button type="button" class="btn btn-success btn-ok btn-embossed mr-15 " style="width: 100px;line-height: 36px; padding: 0; background-color: #34c191" >保存</button>
     </div>
 </form>
+<script>
+    $('#wx_img').click(function () {
+        $('#pic').click();
+    })
+    $("#pic").change(function (){
+        //判断是否支持FileReader
+        if(window.FileReader) {
+            var reader = new FileReader();
+        } else {
+            alert("您的设备不支持图片预览功能，如需该功能请升级您的设备！");
+        }
+        //获取文件
+        var file = this.files[0];
+        var imageType = /^image\//;
+        //是否是图片
+        if(!imageType.test(file.type)) {
+            alert("请选择图片！");
+            return;
+        }
+        //读取完成
+        reader.onload = function(e) {
+            //获取图片dom
+            var img = document.getElementById("wx_img");
+            //图片路径设置为读取的图片
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    $(function () {
+        $('#group_id').change(function () {
+           if (this.value == 12) { // 业务员
+                $('#wx_image').css('display', 'block');
+           } else {
+                $('#wx_image').css('display', 'none');
+           }
+           if (this.value == 13) { // 客服主管
+               $('#wx_info').css('display', 'block');
+           } else {
+               $('#wx_info').css('display', 'none');
+           }
+        })
+        
+        if ($('#group_now').val() == 12) { // 业务员
+            $('#wx_image').css('display', 'block');
+        }
+        if ($('#wx_info').val() == 13) { // 客服主管
+            $('#wx_image').css('display', 'block');
+        }
+    })
+    $('.btn-ok').click(function () {
+        var group_id  = $('#group_id').val();
+        var nickname  = $('#nickname').val();
+        var realname  = $('#realname').val();
+        var mobile  = $('#mobile').val();
+        var pass  = $('#pass').val();
+        var re_pass  = $('#re_pass').val();
+        var wx_id  = $('#wx_id').val();
+        var wx_nickname  = $('#wx_nickname').val();
+        var bank_card  = $('#bank_card').val();
+        var bank_name  = $('#bank_name').val();
+        var qq_id  = $('#qq_id').val();
+
+        var formData = new FormData();
+        formData.append('group_id', group_id);
+        formData.append('nickname', nickname);
+        formData.append('realname', realname);
+        formData.append('mobile', mobile);
+        formData.append('pass', pass);
+        formData.append('re_pass', re_pass);
+        formData.append('wx_id', wx_id);
+        formData.append('wx_nickname', wx_nickname);
+        formData.append('bank_card', bank_card);
+        formData.append('bank_name', bank_name);
+        formData.append('qq_id', qq_id);
+        if (group_id == 12) {
+            // 代写
+            formData.append('wx_image', $('#pic')[0].files[0]);  //添加图片信息的参数
+        }
+
+        $.ajax({
+            url: '',
+            type: 'POST',
+            cache: false, //上传文件不需要缓存
+            data: formData,
+            processData: false, // 告诉jQuery不要去处理发送的数据
+            contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+            success: function (data) {
+                var rs = eval("("+data+")");
+                if (rs.code == 1) {
+                    layer.msg(rs.msg, {
+                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function () {
+                        window.parent.location.reload();
+                    });
+                } else {
+                    layer.msg(rs.msg);
+                }
+            },
+            error: function (data) {
+                layer.msg("上传失败");
+            }
+        })
+    })
+</script>

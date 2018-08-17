@@ -34,3 +34,6 @@ CREATE TABLE `s1s_shop` (
   `reviewtime` int(11) NOT NULL DEFAULT '0' COMMENT '审核通过时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='商户店铺表';
+
+ALTER TABLE `s1s_admin`
+ADD COLUMN `realname` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '真实姓名' AFTER `id`;
